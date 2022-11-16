@@ -1,4 +1,4 @@
-package breakout;
+package MazeGame;
 
 import edu.macalester.graphics.GraphicsGroup;
 

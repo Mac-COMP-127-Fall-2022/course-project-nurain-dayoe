@@ -1,4 +1,4 @@
-package breakout;
+package MazeGame;
 import java.awt.Color;
 import java.io.File;
 
@@ -6,12 +6,7 @@ import java.util.Iterator;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import edu.macalester.graphics.CanvasWindow;
-import edu.macalester.graphics.FontStyle;
-import edu.macalester.graphics.GraphicsGroup;
-import edu.macalester.graphics.GraphicsObject;
-import edu.macalester.graphics.Image;
-import edu.macalester.graphics.Rectangle;
+import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
 import edu.macalester.graphics.ui.*;
 
