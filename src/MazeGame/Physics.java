@@ -1,6 +1,5 @@
 package MazeGame;
 import java.util.HashMap;
-import java.util.Map;
 
 import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
@@ -15,10 +14,10 @@ public class Physics {
     private String curAnimRight = "anim1Right.bmp";
     private String curAnimBack = "anim1Back.bmp";
 
-    private Map animMapFront = new HashMap<>();
-    private Map animMapLeft = new HashMap<>();
-    private Map animMapRight = new HashMap<>();
-    private Map animMapBack = new HashMap<>();
+    private HashMap<String, String> animMapFront = new HashMap<>();
+    private HashMap<String, String> animMapLeft = new HashMap<>();
+    private HashMap<String, String> animMapRight = new HashMap<>();
+    private HashMap<String, String> animMapBack = new HashMap<>();
     
     public Physics(){
         animMapFront.put("anim1Front.bmp", "anim2Front.bmp");

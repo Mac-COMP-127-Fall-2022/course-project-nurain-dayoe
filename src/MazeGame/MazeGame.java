@@ -1,14 +1,9 @@
 package MazeGame;
-import java.awt.Color;
 import java.io.File;
-
-import java.util.Iterator;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import edu.macalester.graphics.*;
-import edu.macalester.graphics.events.*;
-import edu.macalester.graphics.ui.*;
 
 
 public class MazeGame {
@@ -19,7 +14,6 @@ public class MazeGame {
     private GraphicsGroup layer1;
     private Physics physics = new Physics();
     private Clip backGroundMusic;
-    private int brickGroupPatternID =0;
     private String musicFilePath = "res/music.wav";
 
     public MazeGame() { 
