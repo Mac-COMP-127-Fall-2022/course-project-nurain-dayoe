@@ -3,6 +3,7 @@ import java.util.HashMap;
 
 import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
+@Deprecated
 public class Physics {
 
     public static final Key rightArrow = Key.RIGHT_ARROW;
@@ -36,15 +37,15 @@ public class Physics {
         animMapBack.put("anim2Back.bmp","anim3Back.bmp");
         animMapBack.put("anim3Back.bmp","anim1Back.bmp");
     }
-public void move(CanvasWindow canvas, Image background, Image sprite,Key key,GraphicsGroup layer){
+public void move(CanvasWindow canvas, Image background, Image sprite, Key key,GraphicsGroup layer){
     if (key == upArrow){
-        yScroll(background, 1, canvas,sprite,layer);
+        yScroll(background, 1, canvas, sprite,layer);
     }else if(key==downArrow){
-        yScroll(background,-1, canvas,sprite,layer);
+        yScroll(background,-1, canvas, sprite,layer);
     }else if (key == rightArrow){
-        xScroll(background, -1, canvas,sprite,layer);
+        xScroll(background, -1, canvas, sprite,layer);
     }else if (key == leftArrow){
-        xScroll(background, 1, canvas,sprite,layer);
+        xScroll(background, 1, canvas, sprite, layer);
     }
     
 
@@ -137,7 +138,7 @@ public  void xScroll(Image background, double dx, CanvasWindow canvas,Image zeld
     
 }
 
-
+@Deprecated
 public void scrollBackground(Image background, MouseMotionEvent m,CanvasWindow canvas,Image zelda,GraphicsGroup layer){
     double newX = m.getDelta().getX() + background.getPosition().getX();
     double newY = m.getDelta().getY() + background.getPosition().getY();
