@@ -15,8 +15,8 @@ public class Player {
         this.canvas = canvas;
         this.maze = maze;
         canvas.add(graphic);
-        System.out.println(graphic.getHeight());
-        System.out.println(graphic.getWidth());
+        graphic.setPosition(100,100);
+        graphic.setScale(0.5);
         position = graphic.getPosition();
         canvas.add(graphic);
     }
@@ -45,10 +45,20 @@ public class Player {
     }
 
     private boolean collision(Point newPosition) {
-        Point right = new Point(newPosition.getX() + graphic.getWidth() / 2, newPosition.getY());
-        Point left = new Point(newPosition.getX() - graphic.getWidth() / 2, newPosition.getY());
-        Point top = new Point(newPosition.getX(), newPosition.getY() - graphic.getHeight() / 2);
-        Point bottom = new Point(newPosition.getX(), newPosition.getY() + graphic.getHeight() / 2);
-        return maze.getElementAt(newPosition) != null && maze.getElementAt(right) != null && maze.getElementAt(left) != null && maze.getElementAt(top) != null && maze.getElementAt(bottom) != null;
+        //TODO Figure out logic
+        Point right = new Point(newPosition.getX() + graphic.getWidth(), newPosition.getY() + graphic.getHeight() / 4);
+        Point left = new Point(newPosition.getX(), newPosition.getY() + graphic.getHeight() / 4);
+        Point top = new Point(newPosition.getX() + graphic.getWidth() / 4, newPosition.getY());
+        Point bottom = new Point(newPosition.getX() + graphic.getWidth() / 4, newPosition.getY() + graphic.getHeight());
+        System.out.println(newPosition);
+        return maze.getElementAt(newPosition) != null || 
+               maze.getElementAt(right) != null || 
+               maze.getElementAt(left) != null || 
+               maze.getElementAt(top) != null || 
+               maze.getElementAt(bottom) != null ||
+               right.getX() > MazeGame.CANVAS_WIDTH ||
+               left.getX() < 0 ||
+               top.getY() < 0 ||
+               bottom.getY() > MazeGame.CANVAS_HEIGHT;
     }
 }

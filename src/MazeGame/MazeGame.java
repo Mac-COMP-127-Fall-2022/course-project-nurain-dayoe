@@ -9,7 +9,8 @@ public class MazeGame {
     private CanvasWindow canvas ;
     private Player zelda;
     private GraphicsGroup maze = new GraphicsGroup();
-    public final static double CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000, SPEED = 10;
+    public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
+    public final static double SPEED = 10;
 
     public MazeGame() { 
         resetGame();
@@ -21,7 +22,7 @@ public class MazeGame {
         new MazeGame();
     }
     protected void resetGame(){
-        canvas = new CanvasWindow("Breath of the Maze", 800, 400);
+        canvas = new CanvasWindow("Breath of the Maze", CANVAS_WIDTH, CANVAS_HEIGHT);
         this.zelda = new Player(canvas, maze);
         maze.setPosition(0,0);
     }
