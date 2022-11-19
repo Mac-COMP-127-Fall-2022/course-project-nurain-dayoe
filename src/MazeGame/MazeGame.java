@@ -68,7 +68,7 @@ public class MazeGame {
     private void testGrid() {
         for (Block[] blockRow : mazeBlocks) {
             for (Block block : blockRow) {
-                if(block == mazeBlocks[2][1]) {
+                if(block == mazeBlocks[1][1]) {
                 block.addBorder(Side.RIGHT);
                 block.addBorder(Side.TOP);
                 block.addBorder(Side.LEFT);

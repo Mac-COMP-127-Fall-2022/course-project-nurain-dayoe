@@ -4,7 +4,7 @@ import edu.macalester.graphics.*;
 import java.awt.Color;
 
 public class Block {
-    public static final double BLOCK_SIZE = 46, BORDER_SIZE = 2;
+    public static final double BLOCK_SIZE = 71, BORDER_SIZE = 2;
     private Rectangle right, left, top, bottom;
     private static GraphicsGroup maze;
     public static enum Side {RIGHT, LEFT, TOP, BOTTOM}
