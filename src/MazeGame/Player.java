@@ -20,7 +20,7 @@ public class Player {
         // canvas.add(line1);
         // canvas.add(line2);
 
-        graphic.setPosition(50, 50); //TODO: Set inital position
+        graphic.setPosition(-5, -5); //TODO: Set inital position
         graphic.setScale(0.5);
         position = graphic.getPosition();
         canvas.add(graphic);
