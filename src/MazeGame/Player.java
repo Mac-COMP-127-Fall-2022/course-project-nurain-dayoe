@@ -20,8 +20,10 @@ public class Player {
         // canvas.add(line1);
         // canvas.add(line2);
 
-        graphic.setPosition(-5, -5); //TODO: Set inital position
-        graphic.setScale(0.5);
+        graphic.setPosition(15, 490); //TODO: Set inital position
+
+
+        graphic.setScale(0.3);
         position = graphic.getPosition();
         canvas.add(graphic);
     }
@@ -55,6 +57,8 @@ public class Player {
         Point left = new Point(newPosition.getX() + graphic.getWidth() * 0.3, newPosition.getY() + graphic.getHeight() * 0.5);
         Point top = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getWidth() * 0.3);
         Point bottom = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getHeight() * 0.7);
+
+        
         // line1.setStartPosition(right);
         // line1.setEndPosition(left);
         // line2.setStartPosition(top);
