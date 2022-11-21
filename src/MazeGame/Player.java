@@ -50,23 +50,32 @@ public class Player {
     }
 
     public boolean collision(Point moveVector) {
-        Point newPosition = position.add(moveVector);
-        Point right = new Point(newPosition.getX() + graphic.getWidth() * 0.7, newPosition.getY() + graphic.getHeight() * 0.5);
-        Point left = new Point(newPosition.getX() + graphic.getWidth() * 0.3, newPosition.getY() + graphic.getHeight() * 0.5);
-        Point top = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getWidth() * 0.3);
-        Point bottom = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getHeight() * 0.7);
-        // line1.setStartPosition(right);
-        // line1.setEndPosition(left);
-        // line2.setStartPosition(top);
-        // line2.setEndPosition(bottom);
-        return maze.getElementAt(newPosition) != null || 
-               maze.getElementAt(right) != null || 
-               maze.getElementAt(left) != null || 
-               maze.getElementAt(top) != null || 
-               maze.getElementAt(bottom) != null ||
-               right.getX() >= MazeGame.CANVAS_WIDTH ||
-               left.getX() <= 0 ||
-               top.getY() <= 0 ||
-               bottom.getY() >= MazeGame.CANVAS_HEIGHT;
+        boolean collision = false;
+        Point newPosition = position, right, left, top, bottom;
+        for (double i = 0; i < MazeGame.SPEED; i++) {
+            newPosition = newPosition.add(moveVector.scale(1/MazeGame.SPEED));
+            right = new Point(newPosition.getX() + graphic.getWidth() * 0.7, newPosition.getY() + graphic.getHeight() * 0.5);
+            left = new Point(newPosition.getX() + graphic.getWidth() * 0.3, newPosition.getY() + graphic.getHeight() * 0.5);
+            top = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getWidth() * 0.3);
+            bottom = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getHeight() * 0.7);
+            
+            collision = maze.getElementAt(right) != null || 
+                maze.getElementAt(left) != null || 
+                maze.getElementAt(top) != null || 
+                maze.getElementAt(bottom) != null ||
+                right.getX() >= MazeGame.CANVAS_WIDTH ||
+                left.getX() <= 0 ||
+                top.getY() <= 0 ||
+                bottom.getY() >= MazeGame.CANVAS_HEIGHT;
+            if (collision) {
+                return true;
+            }
+            // line1.setStartPosition(right);
+            // line1.setEndPosition(left);
+            // line2.setStartPosition(top);
+            // line2.setEndPosition(bottom);
+        }
+        
+        return false;
     }
 }
