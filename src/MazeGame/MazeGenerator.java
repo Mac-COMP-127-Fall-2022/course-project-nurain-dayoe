@@ -17,7 +17,7 @@ public class MazeGenerator {
         Scanner fileScanner;
         Double[][] bluePrintMatrix = new Double[100][100];
         try {
-            fileScanner = new Scanner(new File("sample.csv"));
+            fileScanner = new Scanner(new File("sample2.csv"));
             fileScanner.useDelimiter(",");   
             int counter = 0;
             while (fileScanner.hasNext())  
@@ -42,20 +42,16 @@ public class MazeGenerator {
             curImage = "grass.bmp";
             for(Double i: row){
 
-                String img1Path = "grass.bmp";
+                String img1Path = "grass.jpg";
                 String img2Path = "grass2.bmp";
                 if (curImage==img1Path){
                     curImage = img2Path;
                 }else{
                     curImage = img1Path;
                 }
-                
-                
-                
-                
                 if (i==0){
                     // Rectangle temp = new Rectangle(rowIndex*pos, columnIndex*pos, pos, pos);
-                    Image tmp = new Image(curImage);
+                    Image tmp = new Image(img1Path);
                     tmp.setPosition(rowIndex*pos, columnIndex*pos);
                     // temp.setFillColor(Color.BLACK);
                     mazeMap.add(tmp);

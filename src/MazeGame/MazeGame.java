@@ -21,6 +21,7 @@ public class MazeGame {
 
     public MazeGame() { 
         resetGame();
+        
         canvas.onKeyDown((key)->{
             move(key.getKey());
         });
