@@ -19,7 +19,7 @@ public class MazeGame {
 
     // private Block[][] mazeBlocks = new Block[30][30];
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
-    public final static double SPEED = 2;
+    public final static double SPEED = 5;
 
     public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.TOP, new Point(0, -1), Side.BOTTOM, new Point(0, 1)));
 
