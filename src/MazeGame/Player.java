@@ -3,6 +3,9 @@ import MazeGame.Block.Side;
 import edu.macalester.graphics.*;
 
 public class Player {
+    public final static double SPEED = 11;
+    private final double WIDTH, HEIGHT;
+
     private Point position;
     private PlayerImage animMapFront = new PlayerImage("anim2Front.bmp", "anim3Front.bmp", "anim1Front.bmp");
     private PlayerImage animMapLeft = new PlayerImage("anim2Left.bmp", "anim3Left.bmp", "anim1Left.bmp");
@@ -21,11 +24,13 @@ public class Player {
         canvas.add(line1);
         canvas.add(line2);
 
-        graphic.setPosition(15, 490); //TODO: Set inital position
+        graphic.setPosition(500, 500); //TODO: Set inital position
 
 
         graphic.setScale(0.3);
         position = graphic.getPosition();
+        WIDTH = graphic.getWidth();
+        HEIGHT = graphic.getHeight();
         canvas.add(graphic);
     }
 
@@ -33,12 +38,7 @@ public class Player {
         return graphic;
     }
 
-    public void move(Side side) {
-        Point newPosition = position.add(MazeGame.directionVectors.get(side));
-        if (!collision(side)) {
-            position = newPosition;
-            graphic.setPosition(newPosition);
-        }
+    public void move(Side side, boolean move) {
         switch (side) {
             case RIGHT:
                 graphic.setImagePath(animMapRight.next());
@@ -55,6 +55,11 @@ public class Player {
             default:
                 throw new IllegalArgumentException();
         }
+        if (!collision(side) && move) {
+            Point newPosition = position.add(MazeGame.directionVectors.get(side));
+            position = newPosition;
+            graphic.setPosition(newPosition);
+        }
     }
 
     public boolean collision(Side side) {
@@ -63,39 +68,39 @@ public class Player {
         Point newPosition = position.add(moveVector);
         switch (side) {
             case RIGHT:
-                point1 = new Point(newPosition.getX() + graphic.getWidth() * 0.6, newPosition.getY() + graphic.getHeight() * 0.35);
-                point2 = new Point(newPosition.getX() + graphic.getWidth() * 0.6, newPosition.getY() + graphic.getHeight() * 0.5);
-                point3 = new Point(newPosition.getX() + graphic.getWidth() * 0.6, newPosition.getY() + graphic.getHeight() * 0.65);
+                point1 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35);
+                point2 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.5);
+                point3 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.65);
                 break;
             case LEFT:
-                point1 = new Point(newPosition.getX() + graphic.getWidth() * 0.4, newPosition.getY() + graphic.getHeight() * 0.35);
-                point2 = new Point(newPosition.getX() + graphic.getWidth() * 0.4, newPosition.getY() + graphic.getHeight() * 0.5);
-                point3 = new Point(newPosition.getX() + graphic.getWidth() * 0.4, newPosition.getY() + graphic.getHeight() * 0.65);
+                point1 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.35);
+                point2 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.5);
+                point3 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.65);
                 break;
             case TOP:
-                point1 = new Point(newPosition.getX() + graphic.getWidth() * 0.35, newPosition.getY() + graphic.getHeight() * 0.4);
-                point2 = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getHeight() * 0.4);
-                point3 = new Point(newPosition.getX() + graphic.getWidth() * 0.65, newPosition.getY() + graphic.getHeight() * 0.4);
+                point1 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.35);
+                point2 = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + HEIGHT * 0.35);
+                point3 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35);
                 break;
             case BOTTOM: 
-                point1 = new Point(newPosition.getX() + graphic.getWidth() * 0.35, newPosition.getY() + graphic.getHeight() * 0.6);
-                point2 = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getHeight() * 0.6);
-                point3 = new Point(newPosition.getX() + graphic.getWidth() * 0.65, newPosition.getY() + graphic.getHeight() * 0.6);
+                point1 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.65);
+                point2 = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + HEIGHT * 0.65);
+                point3 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.65);
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        line1.setStartPosition(point1);
-        line1.setEndPosition(point2);
-        line2.setStartPosition(point2);
-        line2.setEndPosition(point3);
-        if (maze.getElementAt(point1) != null || maze.getElementAt(point1) != null || maze.getElementAt(point1) != null) {
+        line1.setStartPosition(new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35));
+        line1.setEndPosition(new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.65));
+        line2.setStartPosition(new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.35));
+        line2.setEndPosition(new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35));
+        if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
             return true;
         }
-        Point right = new Point(newPosition.getX() + graphic.getWidth() * 0.7, newPosition.getY() + graphic.getHeight() * 0.5);
-        Point left = new Point(newPosition.getX() + graphic.getWidth() * 0.3, newPosition.getY() + graphic.getHeight() * 0.5);
-        Point top = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getWidth() * 0.3);
-        Point bottom = new Point(newPosition.getX() + graphic.getWidth() * 0.5, newPosition.getY() + graphic.getHeight() * 0.7);
+        Point right = new Point(newPosition.getX() + WIDTH * 0.7, newPosition.getY() + HEIGHT * 0.5);
+        Point left = new Point(newPosition.getX() + WIDTH * 0.3, newPosition.getY() + HEIGHT * 0.5);
+        Point top = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + WIDTH * 0.3);
+        Point bottom = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + HEIGHT * 0.7);
         if (right.getX() >= MazeGame.CANVAS_WIDTH || left.getX() <= 0 || top.getY() <= 0 || bottom.getY() >= MazeGame.CANVAS_HEIGHT) {
             return true;
         }
