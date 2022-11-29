@@ -12,7 +12,6 @@ public class MazeGame {
     public static enum Side {RIGHT, LEFT, TOP, BOTTOM}
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
     public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.TOP, new Point(0, -1), Side.BOTTOM, new Point(0, 1)));
-    public final static double SPEED = 2;
 
     private CanvasWindow canvas ;
     private Player zelda;
@@ -81,10 +80,8 @@ public class MazeGame {
                 }
             }
         }
-        minimap.update(zelda.getGraphics().getX()+Math.abs(maze.getPosition().getX()),zelda.getGraphics().getY() + Math.abs(maze.getPosition().getY()));
-        // maze.add(zelda.getGraphics());
-        // minimap.update(zelda.getGraphics().getPosition().getX(),zelda.getGraphics().getPosition().getY());
-        // maze.remove(zelda.getGraphics());
+        minimap.setPosition(zelda.getGraphics().getCenter().getX()+Math.abs(maze.getPosition().getX()),zelda.getGraphics().getCenter().getY() + Math.abs(maze.getPosition().getY()));
+        
         zelda.changeImage(side);
     }
 }

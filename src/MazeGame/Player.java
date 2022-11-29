@@ -2,7 +2,7 @@ package MazeGame;
 import edu.macalester.graphics.*;
 
 public class Player {
-    public final static double SPEED = 11;
+    public final static double SPEED = 10;
     private final double WIDTH, HEIGHT;
 
     private Point position;

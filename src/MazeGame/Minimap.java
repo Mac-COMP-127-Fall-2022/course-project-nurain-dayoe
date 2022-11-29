@@ -2,11 +2,7 @@ package MazeGame;
 
 import java.awt.Color;
 
-import edu.macalester.graphics.CanvasWindow;
-import edu.macalester.graphics.Ellipse;
-import edu.macalester.graphics.GraphicsGroup;
-import edu.macalester.graphics.Image;
-import edu.macalester.graphics.Rectangle;
+import edu.macalester.graphics.*;
 
 public class Minimap {
     public static int test;
@@ -35,14 +31,15 @@ public class Minimap {
         miniMap.add(mapPointer);
         mapPointer.setCenter(100,100);
         destinationPointer.setCenter(windowSize - windowSize/10,  windowSize - windowSize/10);
+        System.out.println(mapImage.getSize());
     }
-    public void update(double x, double y ){
-        double sizeRatio = 0.1;
+    public void setPosition(double x, double y ){
+        double sizeRatio = 0.05;
         double xPos = (x*sizeRatio);
         double yPos = (y*sizeRatio);
         mapPointer.setCenter(xPos,yPos);
-        // System.out.println(xPos);
-        // System.out.println(yPos);
+        System.out.println(new Point(x, y));
+        System.out.println(new Point(xPos, yPos));
     }
     
 

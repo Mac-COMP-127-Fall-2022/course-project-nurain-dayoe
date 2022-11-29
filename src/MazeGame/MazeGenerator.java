@@ -2,12 +2,10 @@ package MazeGame;
 
 import edu.macalester.graphics.GraphicsGroup;
 import edu.macalester.graphics.Image;
-import edu.macalester.graphics.Rectangle;
 
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.awt.Color;
 
 public class MazeGenerator {
     public GraphicsGroup mazeMap;
