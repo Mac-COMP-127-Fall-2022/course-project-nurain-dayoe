@@ -28,15 +28,6 @@ public class MazeGame {
         canvas.onKeyDown((key)->{
             move(key.getKey());
         });
-
-    //     canvas.onDrag((m)->{
-    //         double newX = m.getDelta().getX() + maze.getPosition().getX();
-    //         double newY = m.getDelta().getY() + maze.getPosition().getY();
-
-    //         if (newX<=0 &&newY<=0 && newX >= -1*maze.getWidth() + canvas.getWidth()&&newY >= -1*maze.getHeight()+canvas.getHeight()){
-    //             maze.setPosition(newX, newY);
-    // }
-    //     });
     }
     public static void main(String[] args){
         MazeGame game = new MazeGame();
@@ -48,11 +39,6 @@ public class MazeGame {
         pathBg.setFillColor(Color.LIGHT_GRAY);
         canvas.add(pathBg);
         canvas.add(maze);
-        // try {
-            
-        // } catch (Exception e) {
-        //     //TODO: handle exception
-        // }
         
         maze.setScale(0.25, 0.25);
         maze.setCenter(canvas.getCenter());
@@ -84,18 +70,14 @@ public class MazeGame {
             if (!zelda.collision(side)){
                 double newX =  -scrollVector.getX() + maze.getPosition().getX();
                 double newY = -scrollVector.getY() + maze.getPosition().getY();
-                // System.out.println(newX);
-                // System.out.println(newY);
-                if (newX >= CANVAS_WIDTH - maze.getWidth() && newY >= CANVAS_HEIGHT - maze.getHeight() && newX <= 0 && newY <= 0) {
-                    maze.setPosition(newX, newY);
-                } else { //TODO: Don't scroll until middle is reached
-                    double newPlayerX = zelda.getPosition().add(directionVectors.get(side)).getX(), newPlayerY = zelda.getPosition().add(directionVectors.get(side)).getY();
+                double newPlayerX = zelda.getPosition().add(directionVectors.get(side)).getX(), newPlayerY = zelda.getPosition().add(directionVectors.get(side)).getY();
+                if ((newPlayerX > 550 && side == Side.LEFT) || (newPlayerX < 450 && side == Side.RIGHT) || (newPlayerY > 550 && side == Side.TOP) || (newPlayerY < 450 && side == Side.BOTTOM)) {
                     
-                    if ((newPlayerX > 550 && side == Side.LEFT) || (newPlayerX < 450 && side == Side.RIGHT) || (newPlayerY > 550 && side == Side.TOP) || (newPlayerX < 450 && side == Side.BOTTOM)) {
-                        maze.setPosition(newX, newY);
-                    } else {
-                        zelda.move(side);
-                    }
+                    zelda.move(side);
+                } else if (newX >= CANVAS_WIDTH - maze.getWidth() && newY >= CANVAS_HEIGHT - maze.getHeight() && newX <= 0 && newY <= 0){
+                    maze.setPosition(newX, newY);
+                } else {
+                    zelda.move(side);
                 }
             }
         }

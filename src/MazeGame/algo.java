@@ -8,7 +8,7 @@ public class algo {
     
     public static void main(String[] args) {
         algo temp = new algo();
-        System.out.println(temp.Matrix);
+        //System.out.println(temp.Matrix);
     }
 }
 

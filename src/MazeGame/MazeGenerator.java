@@ -24,7 +24,7 @@ public class MazeGenerator {
                 {  
                     int row = Math.floorDiv(counter, 100);
                     int column = counter%100;
-                    System.out.println(row + " "+ column);
+                    //System.out.println(row + " "+ column);
                     bluePrintMatrix[row][column] = Double.valueOf(fileScanner.next());
                     counter +=1;
                 }    
