@@ -1,5 +1,4 @@
 package MazeGame;
-import MazeGame.Block.Side;
 import edu.macalester.graphics.*;
 
 public class Player {
@@ -13,20 +12,21 @@ public class Player {
     private PlayerImage animMapBack = new PlayerImage("anim2Back.bmp", "anim3Back.bmp", "anim1Back.bmp");
     private GraphicsGroup maze;
     private Image graphic = new Image(animMapFront.next());
+    private Minimap minimap;
 
     private Line line1 = new Line(0, 0, 0, 0);
     private Line line2 = new Line(0, 0, 0, 0);
     
-    public Player(CanvasWindow canvas, GraphicsGroup maze){
+    public Player(CanvasWindow canvas, GraphicsGroup maze, Minimap minimap){
+        this.minimap = minimap;
         this.maze = maze;
         canvas.add(graphic);
 
         canvas.add(line1);
         canvas.add(line2);
 
-        graphic.setPosition(500, 500); //TODO: Set inital position
-
-
+        graphic.setPosition(500, 500); //
+    
         graphic.setScale(0.3);
         position = graphic.getPosition();
         WIDTH = graphic.getWidth();
@@ -38,7 +38,19 @@ public class Player {
         return graphic;
     }
 
-    public void move(Side side, boolean move) {
+    public Point getPosition() {
+        return position;
+    }
+
+    public void move(MazeGame.Side side) {
+        if (!collision(side)) {
+            Point newPosition = position.add(MazeGame.directionVectors.get(side));
+            position = newPosition;
+            graphic.setPosition(newPosition);
+        }
+    }
+
+    public void changeImage(MazeGame.Side side) {
         switch (side) {
             case RIGHT:
                 graphic.setImagePath(animMapRight.next());
@@ -55,52 +67,48 @@ public class Player {
             default:
                 throw new IllegalArgumentException();
         }
-        if (!collision(side) && move) {
-            Point newPosition = position.add(MazeGame.directionVectors.get(side));
-            position = newPosition;
-            graphic.setPosition(newPosition);
-        }
     }
 
-    public boolean collision(Side side) {
+    public boolean collision(MazeGame.Side side) {
         Point moveVector = MazeGame.directionVectors.get(side);
         Point point1, point2, point3;
         Point newPosition = position.add(moveVector);
+        double x = newPosition.getX(), y = newPosition.getY();
         switch (side) {
             case RIGHT:
-                point1 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35);
-                point2 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.5);
-                point3 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
+                point2 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.5);
+                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
                 break;
             case LEFT:
-                point1 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.35);
-                point2 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.5);
-                point3 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
+                point2 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.5);
+                point3 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
                 break;
             case TOP:
-                point1 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.35);
-                point2 = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + HEIGHT * 0.35);
-                point3 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35);
+                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
+                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.35);
+                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
                 break;
             case BOTTOM: 
-                point1 = new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.65);
-                point2 = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + HEIGHT * 0.65);
-                point3 = new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
+                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.65);
+                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        line1.setStartPosition(new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35));
-        line1.setEndPosition(new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.65));
-        line2.setStartPosition(new Point(newPosition.getX() + WIDTH * 0.35, newPosition.getY() + HEIGHT * 0.35));
-        line2.setEndPosition(new Point(newPosition.getX() + WIDTH * 0.65, newPosition.getY() + HEIGHT * 0.35));
+        line1.setStartPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
+        line1.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65));
+        line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
+        line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
             return true;
         }
-        Point right = new Point(newPosition.getX() + WIDTH * 0.7, newPosition.getY() + HEIGHT * 0.5);
-        Point left = new Point(newPosition.getX() + WIDTH * 0.3, newPosition.getY() + HEIGHT * 0.5);
-        Point top = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + WIDTH * 0.3);
-        Point bottom = new Point(newPosition.getX() + WIDTH * 0.5, newPosition.getY() + HEIGHT * 0.7);
+        Point right = new Point(x + WIDTH * 0.7, y + HEIGHT * 0.5);
+        Point left = new Point(x + WIDTH * 0.3, y + HEIGHT * 0.5);
+        Point top = new Point(x + WIDTH * 0.5, y + WIDTH * 0.3);
+        Point bottom = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.7);
         if (right.getX() >= MazeGame.CANVAS_WIDTH || left.getX() <= 0 || top.getY() <= 0 || bottom.getY() >= MazeGame.CANVAS_HEIGHT) {
             return true;
         }
