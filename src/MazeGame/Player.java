@@ -1,4 +1,5 @@
 package MazeGame;
+import MazeGame.Block.Side;
 import edu.macalester.graphics.*;
 
 public class Player {
@@ -32,26 +33,31 @@ public class Player {
         return graphic;
     }
 
-    public void move(Point moveVector) {
-        Point newPosition = position.add(moveVector);
-        if (!collision(moveVector)) {
+    public void move(Side side) {
+        Point newPosition = position.add(MazeGame.directionVectors.get(side));
+        if (!collision(side)) {
             position = newPosition;
             graphic.setPosition(newPosition);
         }
-        if (moveVector.getX() > 0) {
-            graphic.setImagePath(animMapRight.next());
-        } else if (moveVector.getX() < 0) {
-            graphic.setImagePath(animMapLeft.next());
-        } else if (moveVector.getY() > 0) {
-            graphic.setImagePath(animMapFront.next());
-        } else if (moveVector.getY() < 0) {
-            graphic.setImagePath(animMapBack.next());
-        } else {
-            return;
+        switch (side) {
+            case RIGHT:
+                graphic.setImagePath(animMapRight.next());
+                break;
+            case LEFT:
+                graphic.setImagePath(animMapLeft.next());
+                break;
+            case TOP:
+                graphic.setImagePath(animMapBack.next());
+                break;
+            case BOTTOM:
+                graphic.setImagePath(animMapFront.next());
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
-    public boolean collision(Point moveVector) {
+    public boolean collision(Side side) {
+        Point moveVector = MazeGame.directionVectors.get(side);
         Point newPosition = position.add(moveVector);
         Point right = new Point(newPosition.getX() + graphic.getWidth() * 0.7, newPosition.getY() + graphic.getHeight() * 0.5);
         Point left = new Point(newPosition.getX() + graphic.getWidth() * 0.3, newPosition.getY() + graphic.getHeight() * 0.5);

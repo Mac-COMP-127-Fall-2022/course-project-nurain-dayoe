@@ -5,6 +5,8 @@ import java.awt.Color;
 import MazeGame.Block.Side;
 import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
+import java.util.Map;
+import java.util.HashMap;
 
 
 public class MazeGame {
@@ -18,6 +20,8 @@ public class MazeGame {
     // private Block[][] mazeBlocks = new Block[30][30];
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
     public final static double SPEED = 2;
+
+    public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.TOP, new Point(0, -1), Side.BOTTOM, new Point(0, 1)));
 
     public MazeGame() { 
         resetGame();
@@ -71,24 +75,25 @@ public class MazeGame {
 
     public void move(Key key) {
         if (key == Key.UP_ARROW){
-            scroll(new Point (0,-SPEED));
+            scroll(Side.TOP);
         }else if(key == Key.DOWN_ARROW){
-            scroll(new Point (0, SPEED));
+            scroll(Side.BOTTOM);
         }else if (key == Key.RIGHT_ARROW){
-            scroll(new Point (SPEED,0));
+            scroll(Side.RIGHT);
         }else if (key == Key.LEFT_ARROW){
-            scroll(new Point (-SPEED,0));
+            scroll(Side.LEFT);
         }
     }
 
-    public void scroll(Point scrollVector){
-        if (!zelda.collision(scrollVector)){
+    public void scroll(Side side){
+        Point scrollVector = directionVectors.get(side);
+        if (!zelda.collision(side)){
             double newX =  -scrollVector.getX() + maze.getPosition().getX();
             double newY = -scrollVector.getY() + maze.getPosition().getY();
             if (newX >= CANVAS_WIDTH - maze.getWidth() && newY >= CANVAS_HEIGHT - maze.getHeight() && newX <= 0 && newY <= 0) {
                 maze.setPosition(newX, newY);
             }
-            zelda.move(scrollVector);
+            zelda.move(side);
         }
     }
 
