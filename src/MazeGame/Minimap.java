@@ -12,11 +12,12 @@ public class Minimap {
     private Integer pointerSize;
     private Rectangle destinationPointer;
     private CanvasWindow canvas;
+
+    private Rectangle border;
     
     public Minimap(double windowSize, CanvasWindow c){
         canvas = c;
         miniMap = new GraphicsGroup();
-        
         mapImage = new Image("maze1minimap.jpg");
         pointerSize = 7;
         mapPointer = new Ellipse(0, 0, pointerSize, pointerSize);
@@ -24,9 +25,13 @@ public class Minimap {
         mapPointer.setFillColor(Color.RED);
         destinationPointer.setFillColor(Color.YELLOW);
         mapImage.setScale(0.1,0.1);
+        border = new Rectangle(0,0,windowSize, windowSize);
+
+        border.setFillColor(Color.BLACK);
+        miniMap.add(border);
         miniMap.setPosition(0,0);
         miniMap.add(mapImage);
-        mapImage.setCenter(windowSize/2,windowSize/2);
+        mapImage.setCenter(windowSize/2 ,windowSize/2 );
         miniMap.add(destinationPointer);
         miniMap.add(mapPointer);
         mapPointer.setCenter(100,100);
@@ -42,6 +47,6 @@ public class Minimap {
 
     public void addToCanvas(CanvasWindow canvas){
         canvas.add(miniMap);
-        miniMap.setPosition(canvas.getWidth()-miniMap.getWidth() - 20, canvas.getHeight() - miniMap.getHeight() - 20);
+        miniMap.setPosition(canvas.getWidth()-miniMap.getWidth() -20 ,  20);
     }
 }

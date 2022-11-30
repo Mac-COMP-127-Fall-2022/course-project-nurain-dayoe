@@ -19,7 +19,7 @@ public class MazeGenerator {
         Scanner fileScanner;
         Double[][] bluePrintMatrix = new Double[100][100];
         try {
-            fileScanner = new Scanner(new File("file.csv"));
+            fileScanner = new Scanner(new File("sample2.csv"));
             fileScanner.useDelimiter(",");   
             int counter = 0;
             while (fileScanner.hasNext())  
