@@ -17,9 +17,25 @@ public class MazeGenerator {
     public MazeGenerator(){
         mazeMap = new GraphicsGroup();
         Scanner fileScanner;
+        Double[][] imageBluePrintMatrix = new Double[100][100];
+        try {
+            fileScanner = new Scanner(new File("bgDataSet.csv"));
+            fileScanner.useDelimiter(",");   
+            int counter = 0;
+            while (fileScanner.hasNext())  
+                {  
+                    int row = Math.floorDiv(counter, 100);
+                    int column = counter%100;
+                    //System.out.println(row + " "+ column);
+                    imageBluePrintMatrix[row][column] = Double.valueOf(fileScanner.next());
+                    counter +=1;
+                }    
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }  
         Double[][] bluePrintMatrix = new Double[100][100];
         try {
-            fileScanner = new Scanner(new File("sample2.csv"));
+            fileScanner = new Scanner(new File("sample3.csv"));
             fileScanner.useDelimiter(",");   
             int counter = 0;
             while (fileScanner.hasNext())  
@@ -40,17 +56,11 @@ public class MazeGenerator {
         
         
         for (Double[] row:bluePrintMatrix){
-            String curImage ;
-            curImage = "grass.bmp";
+            
             for(Double i: row){
 
-                String img1Path = "grass.jpg";
-                String img2Path = "grass2.bmp";
-                if (curImage==img1Path){
-                    curImage = img2Path;
-                }else{
-                    curImage = img1Path;
-                }
+                String img1Path = "resPack/"+ imageBluePrintMatrix[rowIndex][columnIndex].intValue() + ".jpg";
+                
                 if (i==0){
                     Image tmp = new Image(img1Path);
                     tmp.setPosition(rowIndex*pos, columnIndex*pos);

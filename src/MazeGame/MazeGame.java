@@ -1,9 +1,14 @@
 package MazeGame;
 
-import java.awt.Color;
+import java.awt.*;
 
 import edu.macalester.graphics.*;
+import edu.macalester.graphics.Image;
+import edu.macalester.graphics.Point;
+import edu.macalester.graphics.Rectangle;
 import edu.macalester.graphics.events.*;
+import edu.macalester.graphics.ui.Button;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -20,10 +25,19 @@ public class MazeGame {
     private GraphicsGroup maze = i.getMap();
     
     private Minimap minimap;
+
+    
+    private Image startImageButton;
+    private Image cutSceneBG;
+    private Image groundBackGround; 
+
+    private boolean cutScene1shown = false;
     public MazeGame() {
 
         resetGame();
-        
+
+
+
         canvas.onKeyDown((key)->{
             move(key.getKey());
         });
@@ -33,10 +47,23 @@ public class MazeGame {
     }
     protected void resetGame(){
         canvas = new CanvasWindow("Breath of the Maze", CANVAS_WIDTH, CANVAS_HEIGHT);
+        if (!cutScene1shown){
+            cutSceneBG = new Image(0,0,"cutscene1.jpg");
+            startImageButton = new Image("start.jpg");
+            startImageButton.setCenter(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + CANVAS_HEIGHT/4);
+            canvas.onClick((i)->{
+                if (!cutScene1shown){
+                    canvas.remove(cutSceneBG);
+                    canvas.remove(startImageButton);
+                    cutScene1shown = true;
+                }
+            });
+        }
+
+
+        groundBackGround = new Image("ground.jpg");
+        canvas.add(groundBackGround);
         
-        Rectangle pathBg = new Rectangle(0,0, 2000,2000);
-        pathBg.setFillColor(Color.LIGHT_GRAY);
-        canvas.add(pathBg);
         canvas.add(maze);
         
         maze.setScale(0.25, 0.25);
@@ -48,7 +75,12 @@ public class MazeGame {
         minimap.addToCanvas(canvas);
         this.zelda = new Player(canvas, maze, minimap);
 
-        maze.setPosition(-220, 0);
+        maze.setPosition(-280, 0);
+        if(!cutScene1shown){
+            canvas.add(cutSceneBG);
+            canvas.add(startImageButton);
+        }
+
     }
 
     public void move(Key key) {
@@ -75,6 +107,7 @@ public class MazeGame {
                     zelda.move(side);
                 } else if (newX >= CANVAS_WIDTH - maze.getWidth() && newY >= CANVAS_HEIGHT - maze.getHeight() && newX <= 0 && newY <= 0){
                     maze.setPosition(newX, newY);
+                    groundBackGround.setPosition(newX,newY);
                 } else {
                     zelda.move(side);
                 }
