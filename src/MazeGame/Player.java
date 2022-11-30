@@ -14,16 +14,16 @@ public class Player {
     private Image graphic = new Image(animMapFront.next());
     private Minimap minimap;
 
-    private Line line1 = new Line(0, 0, 0, 0);
-    private Line line2 = new Line(0, 0, 0, 0);
+    // private Line line1 = new Line(0, 0, 0, 0);
+    // private Line line2 = new Line(0, 0, 0, 0);
     
     public Player(CanvasWindow canvas, GraphicsGroup maze, Minimap minimap){
         this.minimap = minimap;
         this.maze = maze;
         canvas.add(graphic);
 
-        canvas.add(line1);
-        canvas.add(line2);
+        // canvas.add(line1);
+        // canvas.add(line2);
 
         graphic.setPosition(500, 500); //
     
@@ -98,10 +98,10 @@ public class Player {
             default:
                 throw new IllegalArgumentException();
         }
-        line1.setStartPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
-        line1.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65));
-        line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
-        line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
+        // line1.setStartPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
+        // line1.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65));
+        // line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
+        // line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
             return true;
         }

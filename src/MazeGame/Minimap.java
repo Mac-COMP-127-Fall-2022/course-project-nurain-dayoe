@@ -31,15 +31,12 @@ public class Minimap {
         miniMap.add(mapPointer);
         mapPointer.setCenter(100,100);
         destinationPointer.setCenter(windowSize - windowSize/10,  windowSize - windowSize/10);
-        System.out.println(mapImage.getSize());
     }
     public void setPosition(double x, double y ){
         double sizeRatio = 0.05;
         double xPos = (x*sizeRatio);
         double yPos = (y*sizeRatio);
         mapPointer.setCenter(xPos,yPos);
-        System.out.println(new Point(x, y));
-        System.out.println(new Point(xPos, yPos));
     }
     
 
