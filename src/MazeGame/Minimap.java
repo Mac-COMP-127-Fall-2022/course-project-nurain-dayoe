@@ -39,8 +39,8 @@ public class Minimap {
     }
     public void setPosition(double x, double y ){
         double sizeRatio = 0.05;
-        double xPos = (x*sizeRatio);
-        double yPos = (y*sizeRatio);
+        double xPos = (x*sizeRatio) + 10;
+        double yPos = (y*sizeRatio) + 10;
         mapPointer.setCenter(xPos,yPos);
     }
     
