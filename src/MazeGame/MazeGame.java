@@ -9,6 +9,9 @@ import edu.macalester.graphics.Rectangle;
 import edu.macalester.graphics.events.*;
 import edu.macalester.graphics.ui.Button;
 
+import javax.swing.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -20,6 +23,8 @@ public class MazeGame {
 
     private CanvasWindow canvas ;
     private Player zelda;
+
+    private Hearts hearts;
     // private GraphicsGroup maze = new GraphicsGroup();
     MazeGenerator i = new MazeGenerator();
     private GraphicsGroup maze = i.getMap();
@@ -42,11 +47,13 @@ public class MazeGame {
             move(key.getKey());
         });
     }
+
     public static void main(String[] args){
         MazeGame game = new MazeGame();
     }
     protected void resetGame(){
         canvas = new CanvasWindow("Breath of the Maze", CANVAS_WIDTH, CANVAS_HEIGHT);
+
         if (!cutScene1shown){
             cutSceneBG = new Image(0,0,"cutscene1.jpg");
             startImageButton = new Image("start.jpg");
@@ -76,6 +83,9 @@ public class MazeGame {
         this.zelda = new Player(canvas, maze, minimap);
 
         maze.setPosition(-280, 0);
+        hearts = new Hearts(zelda.getHealthStatus(),canvas);
+        hearts.addToCanvas(canvas);
+
         if(!cutScene1shown){
             canvas.add(cutSceneBG);
             canvas.add(startImageButton);

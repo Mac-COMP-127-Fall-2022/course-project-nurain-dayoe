@@ -6,6 +6,7 @@ public class Player {
     private final double WIDTH, HEIGHT;
 
     private Point position;
+    private int healthStatus;
     private PlayerImage animMapFront = new PlayerImage("anim2Front.bmp", "anim3Front.bmp", "anim1Front.bmp");
     private PlayerImage animMapLeft = new PlayerImage("anim2Left.bmp", "anim3Left.bmp", "anim1Left.bmp");
     private PlayerImage animMapRight = new PlayerImage("anim2Right.bmp", "anim3Right.bmp", "anim1Right.bmp");
@@ -19,6 +20,7 @@ public class Player {
     
     public Player(CanvasWindow canvas, GraphicsGroup maze, Minimap minimap){
         this.minimap = minimap;
+        this.healthStatus = 5;
         this.maze = maze;
         canvas.add(graphic);
 
@@ -49,7 +51,16 @@ public class Player {
             graphic.setPosition(newPosition);
         }
     }
-
+    public void addHealth(){
+        this.healthStatus +=1;
+    }
+    public void removeHealth(){
+        this.healthStatus -=1;
+    }
+    public int getHealthStatus(){
+        int healthCopy = this.healthStatus;
+        return  healthCopy;
+    }
     public void changeImage(MazeGame.Side side) {
         switch (side) {
             case RIGHT:
