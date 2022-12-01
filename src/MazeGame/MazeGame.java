@@ -17,8 +17,8 @@ public class MazeGame {
 
     private Hearts hearts;
     // private GraphicsGroup maze = new GraphicsGroup();
-    MazeGenerator i = new MazeGenerator();
-    private GraphicsGroup maze = i.getMap();
+    algo algo = new algo();
+    private GraphicsGroup maze = algo.getMaze();
     
     private Minimap minimap;
 

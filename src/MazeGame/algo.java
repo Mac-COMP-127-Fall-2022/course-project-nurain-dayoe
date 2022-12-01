@@ -9,7 +9,8 @@ import java.util.*;
 import MazeGame.MazeGame.Side;
 
 public class algo {
-    public int[][] matrix = new int[100][100];//, solutionMatrix = new int[100][100];
+    public static final int MAZE_SIZE = 100;
+    private int[][] matrix = new int[MAZE_SIZE][MAZE_SIZE];//, solutionMatrix = new int[100][100];
     private ArrayList<Point> referencePoints = new ArrayList<Point>();
     private ArrayList<Side> sides = new ArrayList<>(List.of(Side.RIGHT, Side.LEFT, Side.BOTTOM, Side.TOP));
     private boolean firstIteration = true;
@@ -17,9 +18,9 @@ public class algo {
     public int counter = 0;
 
     public algo(){
-        createPath(new Point(0,0), new Point (99, 99));
+        createPath(new Point(0,0), new Point (MAZE_SIZE - 1, MAZE_SIZE - 1));
         createPath(new Point (89, 12), new Point(2, 95));
-        
+        Block.setMatrix(matrix);
     }
 
     private void createPath(Point initial, Point last) {
@@ -35,9 +36,9 @@ public class algo {
                     point1 = referencePoints.get(randomIndex);
                     referencePoints.remove(randomIndex);
                 } else {
-                    point1 = new Point(rand.nextInt(100), rand.nextInt(100));
+                    point1 = new Point(rand.nextInt(MAZE_SIZE), rand.nextInt(MAZE_SIZE));
                 }
-                point2 = new Point(rand.nextInt(100), rand.nextInt(100));
+                point2 = new Point(rand.nextInt(MAZE_SIZE), rand.nextInt(MAZE_SIZE));
             }
 
             while ((point1.getX() != point2.getX() || point1.getY() != point2.getY())) {
@@ -85,12 +86,12 @@ public class algo {
 
         switch (moveDirection) {
             case RIGHT:
-                if (currentPoint[0] < 99) {
+                if (currentPoint[0] < MAZE_SIZE - 1) {
                     currentPoint[0]++;
                 }
                     break;
             case TOP:
-                if (currentPoint[1] < 99) {
+                if (currentPoint[1] < MAZE_SIZE - 1) {
                     currentPoint[1]++;
                 }
                 break;
@@ -117,19 +118,9 @@ public class algo {
         CanvasWindow canvas = new CanvasWindow("Test", 1000,1000);
         GraphicsGroup group = new GraphicsGroup();
         for (int x = 0; x < 100; x++) {
-            for(int y = 0; y < 100; y++){
+            for (int y = 0; y < 100; y++){
                 if (temp.matrix[x][y] == 0) {
-                    Image image = new Image("grass.jpg");
-                    group.add(image);
-                    image.setPosition(x * 40, y * 40);
-                } else if (temp.matrix[x][y] == 1) {
-                    Image image = new Image("respack/12.jpg");
-                    group.add(image);
-                    image.setPosition(x * 40, y * 40);
-                } else {
-                    Image image = new Image("respack/11.jpg");
-                    group.add(image);
-                    image.setPosition(x * 40, y * 40);
+                    group.add(Block.getImage(x, y));
                 }
             }
             group.setScale(0.2);
@@ -137,6 +128,18 @@ public class algo {
             group.setCenter(canvas.getCenter());
             System.out.println("");
         }
+    }
+
+    public GraphicsGroup getMaze() {
+        GraphicsGroup group = new GraphicsGroup();
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 100; y++){
+                if (matrix[x][y] == 0) {
+                    group.add(Block.getImage(x, y));
+                }
+            }
+        }
+        return group;
     }
 }
 
