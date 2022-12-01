@@ -1,17 +1,8 @@
 package MazeGame;
 
-import java.awt.*;
-
 import edu.macalester.graphics.*;
-import edu.macalester.graphics.Image;
-import edu.macalester.graphics.Point;
-import edu.macalester.graphics.Rectangle;
 import edu.macalester.graphics.events.*;
-import edu.macalester.graphics.ui.Button;
 
-import javax.swing.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 

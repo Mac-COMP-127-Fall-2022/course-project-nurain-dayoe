@@ -3,7 +3,6 @@ package MazeGame;
 import edu.macalester.graphics.*;
 
 import java.util.Scanner;
-import java.awt.Color;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,6 +72,14 @@ public class MazeGenerator {
             rowIndex+=1;
             columnIndex=0;
         }
+    }
+
+        public GraphicsGroup getMap() {
+            return mazeMap;
+        }
+    }
+
+
 
         // for (int x = 0; x < 100; x++) {
         //     for (int y = 0; y < 100; y++) {
@@ -99,12 +106,7 @@ public class MazeGenerator {
         //     column = 0;
         //     row++;
         // }
-   
     
-    }
-    public GraphicsGroup getMap(){
-        return mazeMap;
-    }
 
     // private void generateMaze(int minX, int maxX, int minY, int maxY) {
     //     if (minX + 1 >= maxX || minY + 1 >= maxY) {
@@ -139,5 +141,3 @@ public class MazeGenerator {
     //     generateMaze(column + 2, maxX, row + 2, maxY);
     //     generateMaze(minX, column - 2, row + 2, maxY);
     // }
-
-}
