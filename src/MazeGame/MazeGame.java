@@ -69,6 +69,8 @@ public class MazeGame {
         canvas.screenShot("res/maze1minimap.jpg");
         maze.setScale(1,1);
 
+        canvas.pause(1000);
+
         minimap = new Minimap(220,canvas);
         minimap.addToCanvas(canvas);
         this.zelda = new Player(canvas, maze, minimap);
