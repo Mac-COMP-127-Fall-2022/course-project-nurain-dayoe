@@ -28,8 +28,7 @@ public class Player {
         // canvas.add(line1);
         // canvas.add(line2);
 
-        graphic.setCenter(initialPosition.getX() * 40, initialPosition.getY() * 40);
-        System.out.println(initialPosition);
+        graphic.setCenter((initialPosition.getX()) * 40 + graphic.getWidth() * 0.25, (initialPosition.getY()) * 40 + graphic.getHeight() * 0.25);
         graphic.setScale(0.3);
         position = graphic.getPosition();
         WIDTH = graphic.getWidth();

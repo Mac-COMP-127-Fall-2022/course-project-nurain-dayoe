@@ -76,7 +76,7 @@ public class MazeGame {
         
         this.zelda = new Player(canvas, maze, minimap, algo.getBeginningPoint());
 
-        maze.setPosition(-280, 0);
+        maze.setPosition(0, 0);
         hearts = new Hearts(zelda.getHealthStatus(),canvas);
         hearts.addToCanvas(canvas);
 
