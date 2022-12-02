@@ -14,6 +14,7 @@ public class MazeGenerator {
     private Random rand = new Random();
 
     public MazeGenerator(){
+
         mazeMap = new GraphicsGroup();
         Scanner fileScanner;
         Double[][] imageBluePrintMatrix = new Double[100][100];

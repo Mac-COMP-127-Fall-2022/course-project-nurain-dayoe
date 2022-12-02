@@ -14,11 +14,10 @@ public class MazeGame {
 
     private CanvasWindow canvas ;
     private Player zelda;
-
+    
     private Hearts hearts;
-    // private GraphicsGroup maze = new GraphicsGroup();
-    algo algo = new algo();
-    private GraphicsGroup maze = algo.getMaze();
+    private GraphicsGroup maze = new GraphicsGroup();
+    private algo algo;
     
     private Minimap minimap;
 
@@ -26,25 +25,11 @@ public class MazeGame {
     private Image startImageButton;
     private Image cutSceneBG;
     private Image groundBackGround; 
-
+    public static int level ; 
     private boolean cutScene1shown = false;
     public MazeGame() {
-
-        resetGame();
-
-
-
-        canvas.onKeyDown((key)->{
-            move(key.getKey());
-        });
-    }
-
-    public static void main(String[] args){
-        MazeGame game = new MazeGame();
-    }
-    protected void resetGame(){
         canvas = new CanvasWindow("Breath of the Maze", CANVAS_WIDTH, CANVAS_HEIGHT);
-
+        level = 0 ;
         if (!cutScene1shown){
             cutSceneBG = new Image(0,0,"cutscene1.jpg");
             startImageButton = new Image("start.jpg");
@@ -57,8 +42,23 @@ public class MazeGame {
                 }
             });
         }
+        resetGame();
 
 
+
+        canvas.onKeyDown((key)->{
+            move(key.getKey());
+        });
+    }
+
+    public static void main(String[] args){
+        MazeGame game = new MazeGame();
+    }
+    
+    private void resetGame(){
+        algo = new algo();
+        maze = algo.getMaze();
+        
         groundBackGround = new Image("ground.jpg");
         canvas.add(groundBackGround);
         
@@ -73,7 +73,8 @@ public class MazeGame {
 
         minimap = new Minimap(220,canvas);
         minimap.addToCanvas(canvas);
-        this.zelda = new Player(canvas, maze, minimap);
+        
+        this.zelda = new Player(canvas, maze, minimap, algo.getBeginningPoint());
 
         maze.setPosition(-280, 0);
         hearts = new Hearts(zelda.getHealthStatus(),canvas);
@@ -85,7 +86,7 @@ public class MazeGame {
         }
 
     }
-
+    
     public void move(Key key) {
         if (key == Key.UP_ARROW){
             scroll(Side.TOP);

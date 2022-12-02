@@ -16,11 +16,35 @@ public class algo {
     private boolean firstIteration = true;
     private Random rand = new Random();
     public int counter = 0;
+    private Point beginningPoint;
+    private Point destinationPoint;
 
     public algo(){
-        createPath(new Point(0,0), new Point (MAZE_SIZE - 1, MAZE_SIZE - 1));
+        beginningPoint  = new Point(rand.nextInt(10), rand.nextInt(10));
+        destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
+        createPath(beginningPoint, destinationPoint);
         createPath(new Point (89, 12), new Point(2, 95));
         Block.setMatrix(matrix);
+    }
+
+    public GraphicsGroup getMaze() {
+        GraphicsGroup group = new GraphicsGroup();
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 100; y++){
+                if (matrix[x][y] == 0) {
+                    group.add(Block.getImage(x, y));
+                }
+            }
+        }
+        return group;
+    }
+
+    public Point getBeginningPoint() {
+        return beginningPoint;
+    }
+
+    public Point getEndingPoint() {
+        return destinationPoint;
     }
 
     private void createPath(Point initial, Point last) {
@@ -110,36 +134,6 @@ public class algo {
         }
 
         return new Point(currentPoint[0], currentPoint[1]);
-    }
-    
-    public static void main(String[] args) {
-        algo temp = new algo();
-        System.out.println("Running");
-        CanvasWindow canvas = new CanvasWindow("Test", 1000,1000);
-        GraphicsGroup group = new GraphicsGroup();
-        for (int x = 0; x < 100; x++) {
-            for (int y = 0; y < 100; y++){
-                if (temp.matrix[x][y] == 0) {
-                    group.add(Block.getImage(x, y));
-                }
-            }
-            group.setScale(0.2);
-            canvas.add(group);
-            group.setCenter(canvas.getCenter());
-            System.out.println("");
-        }
-    }
-
-    public GraphicsGroup getMaze() {
-        GraphicsGroup group = new GraphicsGroup();
-        for (int x = 0; x < 100; x++) {
-            for (int y = 0; y < 100; y++){
-                if (matrix[x][y] == 0) {
-                    group.add(Block.getImage(x, y));
-                }
-            }
-        }
-        return group;
     }
 }
 

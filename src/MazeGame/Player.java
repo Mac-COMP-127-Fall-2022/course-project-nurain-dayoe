@@ -18,7 +18,8 @@ public class Player {
     // private Line line1 = new Line(0, 0, 0, 0);
     // private Line line2 = new Line(0, 0, 0, 0);
     
-    public Player(CanvasWindow canvas, GraphicsGroup maze, Minimap minimap){
+    public Player(CanvasWindow canvas, GraphicsGroup maze, Minimap minimap, Point initialPosition){
+        
         this.minimap = minimap;
         this.healthStatus = 5;
         this.maze = maze;
@@ -27,8 +28,8 @@ public class Player {
         // canvas.add(line1);
         // canvas.add(line2);
 
-        graphic.setPosition(500, 500); //
-    
+        graphic.setCenter(initialPosition.getX() * 40, initialPosition.getY() * 40);
+        System.out.println(initialPosition);
         graphic.setScale(0.3);
         position = graphic.getPosition();
         WIDTH = graphic.getWidth();
