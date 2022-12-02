@@ -1,9 +1,6 @@
 package MazeGame;
 
-import edu.macalester.graphics.CanvasWindow;
-import edu.macalester.graphics.GraphicsGroup;
-import edu.macalester.graphics.Image;
-import edu.macalester.graphics.Point;
+import edu.macalester.graphics.*;
 import java.util.*;
 
 import MazeGame.MazeGame.Side;
@@ -12,7 +9,7 @@ public class algo {
     public static final int MAZE_SIZE = 100;
     private int[][] matrix = new int[MAZE_SIZE][MAZE_SIZE];//, solutionMatrix = new int[100][100];
     private ArrayList<Point> referencePoints = new ArrayList<Point>();
-    private ArrayList<Side> sides = new ArrayList<>(List.of(Side.RIGHT, Side.LEFT, Side.BOTTOM, Side.TOP));
+    private ArrayList<Side> sides = new ArrayList<>(List.of(Side.RIGHT, Side.LEFT, Side.DOWN, Side.UP));
     private boolean firstIteration = true;
     private Random rand = new Random();
     public int counter = 0;
@@ -24,7 +21,7 @@ public class algo {
         destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
         createPath(beginningPoint, destinationPoint);
         createPath(new Point (89, 12), new Point(2, 95));
-        Block.setMatrix(matrix);
+        Block.buildMaze(matrix);
     }
 
     public GraphicsGroup getMaze() {
@@ -84,9 +81,9 @@ public class algo {
         }
 
         if (p2.getY() > p1.getY()) {
-            weights.add(Side.TOP);
+            weights.add(Side.UP);
         } else if (p2.getY() < p1.getY()){
-            weights.add(Side.BOTTOM);
+            weights.add(Side.DOWN);
         }
 
         return weights;
@@ -114,7 +111,7 @@ public class algo {
                     currentPoint[0]++;
                 }
                     break;
-            case TOP:
+            case UP:
                 if (currentPoint[1] < MAZE_SIZE - 1) {
                     currentPoint[1]++;
                 }
@@ -124,7 +121,7 @@ public class algo {
                     currentPoint[0]--;
                 }
                 break;
-            case BOTTOM:
+            case DOWN:
             if (currentPoint[1] > 0) {
                 currentPoint[1]--;
             }
