@@ -5,7 +5,7 @@ import edu.macalester.graphics.*;
  * A visual player that can move along the road with arrow key presses.
  */
 public class Player {
-    public final static double SPEED = 10;
+    public final static double SPEED = 20;
     private final double WIDTH, HEIGHT;
 
     private Point position;
@@ -26,15 +26,16 @@ public class Player {
         this.minimap = minimap;
         this.healthStatus = 5;
         this.maze = maze;
-        canvas.add(graphic);
 
-        graphic.setCenter(initialPosition.getX() * 40, initialPosition.getY() * 40);
-        System.out.println(initialPosition);
+        graphic.setCenter(initialPosition.getX() * 40 + 20, initialPosition.getY() * 40 + 20);
         graphic.setScale(0.3);
+        canvas.add(graphic);
+        
         position = graphic.getPosition();
         WIDTH = graphic.getWidth();
         HEIGHT = graphic.getHeight();
-        canvas.add(graphic);
+
+        minimap.setPosition(graphic.getCenter().getX(), graphic.getCenter().getY());
     }
 
     public Image getGraphics() {

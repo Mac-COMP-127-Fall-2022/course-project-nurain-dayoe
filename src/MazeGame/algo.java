@@ -7,7 +7,7 @@ import MazeGame.MazeGame.Side;
 
 public class algo {
     public static final int MAZE_SIZE = 100;
-    private int[][] matrix = new int[MAZE_SIZE][MAZE_SIZE];//, solutionMatrix = new int[100][100];
+    private int[][] matrix = new int[MAZE_SIZE][MAZE_SIZE];
     private ArrayList<Point> referencePoints = new ArrayList<Point>();
     private ArrayList<Side> sides = new ArrayList<>(List.of(Side.RIGHT, Side.LEFT, Side.DOWN, Side.UP));
     private boolean firstIteration = true;
@@ -17,7 +17,8 @@ public class algo {
     private Point destinationPoint;
 
     public algo(){
-        beginningPoint  = new Point(rand.nextInt(10), rand.nextInt(10));
+        beginningPoint = new Point(rand.nextInt(1, 11), rand.nextInt(1, 11));
+        System.out.println(beginningPoint);
         destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
         createPath(beginningPoint, destinationPoint);
         createPath(new Point (89, 12), new Point(2, 95));
@@ -93,7 +94,6 @@ public class algo {
         ArrayList<Side> weights = generateWeights(point1, point2);
         int[] currentPoint = {(int) point1.getX(), (int) point1.getY()};
         if (firstIteration) {
-            //solutionMatrix[currentPoint[0]][currentPoint[1]] = 1;
             firstIteration = false;
         }
         if (matrix[currentPoint[0]][currentPoint[1]] == 0) {

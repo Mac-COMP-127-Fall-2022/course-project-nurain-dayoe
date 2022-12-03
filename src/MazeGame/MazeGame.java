@@ -73,10 +73,11 @@ public class MazeGame {
 
         minimap = new Minimap(220,canvas);
         minimap.addToCanvas(canvas);
+        minimap.setTargetLocation(algo.getEndingPoint().getX() * 40 + 20, algo.getEndingPoint().getY() * 40 + 20);
         
         this.zelda = new Player(canvas, maze, minimap, algo.getBeginningPoint());
 
-        maze.setPosition(-280, 0);
+        maze.setPosition(0, 0);
         hearts = new Hearts(zelda.getHealthStatus(),canvas);
         hearts.addToCanvas(canvas);
 
