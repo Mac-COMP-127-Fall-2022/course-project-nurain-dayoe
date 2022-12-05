@@ -12,7 +12,7 @@ public class MazeGame {
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
     public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.UP, new Point(0, -1), Side.DOWN, new Point(0, 1)));
 
-    private CanvasWindow canvas ;
+    private CanvasWindow canvas;
     private Player zelda;
     
     private Hearts hearts;
@@ -82,8 +82,8 @@ public class MazeGame {
         hearts.addToCanvas(canvas);
 
         EnemyCamp enemyCamp = new EnemyCamp(4);
-        Enemy enemy = new Enemy(enemyCamp, zelda, maze);
-        enemy.addToCanvas(canvas, new Point(10,10));
+        Enemy enemy = new Enemy(canvas, maze, enemyCamp, zelda);
+        enemy.addToGraphicsGroup(maze, algo.getBeginningPoint());
 
         canvas.animate(x -> enemy.AI());
 
