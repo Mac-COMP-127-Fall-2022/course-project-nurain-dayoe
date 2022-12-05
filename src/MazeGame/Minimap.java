@@ -11,14 +11,12 @@ public class Minimap {
     private Ellipse mapPointer;
     private Integer pointerSize;
     private Rectangle destinationPointer;
-    private CanvasWindow canvas;
 
     private Rectangle border;
     
     public Minimap(double windowSize, CanvasWindow c){
-        canvas = c;
         miniMap = new GraphicsGroup();
-        mapImage = new Image("maze1minimap.jpg");
+        mapImage = new Image("mazeminimap.jpg");
         pointerSize = 7;
         mapPointer = new Ellipse(0, 0, pointerSize, pointerSize);
         destinationPointer = new Rectangle(0, 0, pointerSize, pointerSize);

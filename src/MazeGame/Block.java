@@ -29,8 +29,7 @@ public class Block {
 
     private boolean road, environmentSet = false;
     private Image graphic;
-    private Environments environment;
-    private int x, y, environmentSubNumber;
+    private int x, y;
 
     /**
      * A builder method to initalize the matrix with Block objects that are either roads or not roads.
@@ -69,6 +68,10 @@ public class Block {
     public boolean isRoad() {
         return road;
     }
+
+    public boolean isRoad(int x, int y) {
+        return blocks[x][y].isRoad();
+    }
     
     public boolean isSet() {
         return environmentSet;
@@ -99,8 +102,6 @@ public class Block {
      */
     private void setEnvironment(Environments environment, int environmentSubNumber) {
         if (!environmentSet && !road) {
-            this.environment = environment;
-            this.environmentSubNumber = environmentSubNumber;
             graphic = new Image(allEnvironments.get(environment)[environmentSubNumber]);
             graphic.setPosition(x * 40, y * 40);
             environmentSet = true;

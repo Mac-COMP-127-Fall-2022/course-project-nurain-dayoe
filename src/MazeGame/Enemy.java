@@ -26,7 +26,7 @@ public class Enemy {
     private GraphicsGroup maze;
     private Image graphic = new Image(animMapFront.next());
 
-    public Enemy(EnemyCamp enemyCamp, Player mainPlayer,GraphicsGroup maze){
+    public Enemy(EnemyCamp enemyCamp, Player mainPlayer, GraphicsGroup maze){
         this.enemyCamp = enemyCamp;
         this.mainPlayer = mainPlayer;
         this.maze = maze;
@@ -77,11 +77,11 @@ public class Enemy {
                     
                     int randomIndex = rand.nextInt(nonNegativeWeightsIndex.size());
                     int randomMovementIndex = nonNegativeWeightsIndex.get(randomIndex);
-                    
+                    position = graphic.getPosition();
                     switch (randomMovementIndex){
                         case 0:
-                            if (!collision(MazeGame.Side.TOP)){
-                                move(MazeGame.Side.TOP);
+                            if (!collision(MazeGame.Side.UP)){
+                                move(MazeGame.Side.UP);
                                 
                             }
                             
@@ -93,8 +93,8 @@ public class Enemy {
                             }
                             break;
                         case 2 : 
-                            if (!collision(MazeGame.Side.BOTTOM)){
-                                move(MazeGame.Side.BOTTOM);
+                            if (!collision(MazeGame.Side.DOWN)){
+                                move(MazeGame.Side.DOWN);
                                 System.out.println("h");
                             }
                             break;
@@ -143,7 +143,6 @@ public class Enemy {
     }
 
     public void move(MazeGame.Side side) {
-        
         if (!collision(side)) {
             Point newPosition = position.add(MazeGame.directionVectors.get(side));
             position = newPosition;
@@ -169,10 +168,10 @@ public class Enemy {
             case LEFT:
                 graphic.setImagePath(animMapLeft.next());
                 break;
-            case TOP:
+            case UP:
                 graphic.setImagePath(animMapBack.next());
                 break;
-            case BOTTOM:
+            case DOWN:
                 graphic.setImagePath(animMapFront.next());
                 break;
             default:
@@ -197,12 +196,12 @@ public class Enemy {
                 point2 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.5);
                 point3 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
                 break;
-            case TOP:
+            case UP:
                 point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
                 point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.35);
                 point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
                 break;
-            case BOTTOM: 
+            case DOWN: 
                 point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
                 point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.65);
                 point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
@@ -215,9 +214,7 @@ public class Enemy {
         // line1.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65));
         // line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
         // line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
-        System.out.println(maze.getElementAt(point1));
-        System.out.println(maze.getElementAt(point2));
-        System.out.println(maze.getElementAt(point3));
+        
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
 
             return true;
@@ -226,9 +223,9 @@ public class Enemy {
     
         Point right = new Point(x + WIDTH * 0.7, y + HEIGHT * 0.5);
         Point left = new Point(x + WIDTH * 0.3, y + HEIGHT * 0.5);
-        Point top = new Point(x + WIDTH * 0.5, y + WIDTH * 0.3);
-        Point bottom = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.7);
-        if (right.getX() >= MazeGame.CANVAS_WIDTH || left.getX() <= 0 || top.getY() <= 0 || bottom.getY() >= MazeGame.CANVAS_HEIGHT) {
+        Point UP = new Point(x + WIDTH * 0.5, y + WIDTH * 0.3);
+        Point DOWN = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.7);
+        if (right.getX() >= MazeGame.CANVAS_WIDTH || left.getX() <= 0 || UP.getY() <= 0 || DOWN.getY() >= MazeGame.CANVAS_HEIGHT) {
             return true;
         }
         

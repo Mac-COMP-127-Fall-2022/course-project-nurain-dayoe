@@ -16,14 +16,11 @@ public class Player {
     private PlayerImage animMapBack = new PlayerImage("anim2Back.bmp", "anim3Back.bmp", "anim1Back.bmp");
     private GraphicsGroup maze;
     private Image graphic = new Image(animMapFront.next());
-    private Minimap minimap;
 
     /**
      * Generate a new player at the given inital position within the canvas.
      */
     public Player(CanvasWindow canvas, GraphicsGroup maze, Minimap minimap, Point initialPosition){
-        
-        this.minimap = minimap;
         this.healthStatus = 5;
         this.maze = maze;
 

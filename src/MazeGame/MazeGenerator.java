@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
+@Deprecated
 public class MazeGenerator {
     public GraphicsGroup mazeMap;
     private byte[][] mazePattern = new byte[100][100];

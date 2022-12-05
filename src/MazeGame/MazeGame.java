@@ -66,7 +66,7 @@ public class MazeGame {
         
         maze.setScale(0.25, 0.25);
         maze.setCenter(canvas.getCenter());
-        canvas.screenShot("res/maze1minimap.jpg");
+        canvas.screenShot("res/mazeminimap.jpg");
         maze.setScale(1,1);
 
         canvas.pause(1000);
@@ -80,6 +80,12 @@ public class MazeGame {
         maze.setPosition(0, 0);
         hearts = new Hearts(zelda.getHealthStatus(),canvas);
         hearts.addToCanvas(canvas);
+
+        EnemyCamp enemyCamp = new EnemyCamp(4);
+        Enemy enemy = new Enemy(enemyCamp, zelda, maze);
+        enemy.addToCanvas(canvas, new Point(10,10));
+
+        canvas.animate(x -> enemy.AI());
 
         if(!cutScene1shown){
             canvas.add(cutSceneBG);
