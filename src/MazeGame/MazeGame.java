@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 
 public class MazeGame {
-    public static enum Side {RIGHT, LEFT, TOP, BOTTOM}
+    public static enum Side {RIGHT, LEFT, UP, DOWN}
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
-    public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.TOP, new Point(0, -1), Side.BOTTOM, new Point(0, 1)));
+    public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.UP, new Point(0, -1), Side.DOWN, new Point(0, 1)));
 
     private CanvasWindow canvas ;
     private Player zelda;
@@ -73,6 +73,7 @@ public class MazeGame {
 
         minimap = new Minimap(220,canvas);
         minimap.addToCanvas(canvas);
+        minimap.setTargetLocation(algo.getEndingPoint().getX() * 40 + 20, algo.getEndingPoint().getY() * 40 + 20);
         
         this.zelda = new Player(canvas, maze, minimap, algo.getBeginningPoint());
 
@@ -89,9 +90,9 @@ public class MazeGame {
     
     public void move(Key key) {
         if (key == Key.UP_ARROW){
-            scroll(Side.TOP);
+            scroll(Side.UP);
         }else if(key == Key.DOWN_ARROW){
-            scroll(Side.BOTTOM);
+            scroll(Side.DOWN);
         }else if (key == Key.RIGHT_ARROW){
             scroll(Side.RIGHT);
         }else if (key == Key.LEFT_ARROW){
@@ -106,7 +107,7 @@ public class MazeGame {
                 double newX =  -scrollVector.getX() + maze.getPosition().getX();
                 double newY = -scrollVector.getY() + maze.getPosition().getY();
                 double newPlayerX = zelda.getPosition().add(directionVectors.get(side)).getX(), newPlayerY = zelda.getPosition().add(directionVectors.get(side)).getY();
-                if ((newPlayerX > 550 && side == Side.LEFT) || (newPlayerX < 450 && side == Side.RIGHT) || (newPlayerY > 550 && side == Side.TOP) || (newPlayerY < 450 && side == Side.BOTTOM)) {
+                if ((newPlayerX > 550 && side == Side.LEFT) || (newPlayerX < 450 && side == Side.RIGHT) || (newPlayerY > 550 && side == Side.UP) || (newPlayerY < 450 && side == Side.DOWN)) {
                     
                     zelda.move(side);
                 } else if (newX >= CANVAS_WIDTH - maze.getWidth() && newY >= CANVAS_HEIGHT - maze.getHeight() && newX <= 0 && newY <= 0){

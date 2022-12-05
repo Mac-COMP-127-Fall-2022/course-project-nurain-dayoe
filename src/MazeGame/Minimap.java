@@ -43,6 +43,13 @@ public class Minimap {
         double yPos = (y*sizeRatio) + 10;
         mapPointer.setCenter(xPos,yPos);
     }
+
+    public void setTargetLocation(double x, double y ){
+        double sizeRatio = 0.05;
+        double xPos = (x*sizeRatio) + 10;
+        double yPos = (y*sizeRatio) + 10;
+        mapPointer.setCenter(xPos,yPos);
+    }
     
 
     public void addToCanvas(CanvasWindow canvas){
