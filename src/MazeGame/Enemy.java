@@ -2,8 +2,6 @@ package MazeGame;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.LayoutStyle;
-
 import MazeGame.MazeGame.Side;
 import edu.macalester.graphics.*;
 
@@ -47,7 +45,7 @@ public class Enemy extends Character{
         graphic.setCenter(MazeGenerator.getBeginningPoint().getX() * 40 + 20, MazeGenerator.getBeginningPoint().getY() * 40 + 20);
         position = graphic.getPosition();
         
-        maze.add(graphic);
+        canvas.add(graphic);
         this.canvas = canvas;
     }
 
@@ -59,7 +57,7 @@ public class Enemy extends Character{
         }
         validBlocks[currentX][currentY] = false;
 
-        ArrayList<Side> sideOrder = new ArrayList<>(4);
+        ArrayList<MazeGame.Side> sideOrder = new ArrayList<>(4);
 
         if (endY > currentY) {
             sideOrder.add(Side.DOWN);
@@ -144,7 +142,7 @@ public class Enemy extends Character{
                 }
             }
         }
-
+        
         if (stepCounter == -1) {
             if (planMove((int) MazeGenerator.getBeginningPoint().getX(), (int) MazeGenerator.getBeginningPoint().getY(), xEnd, yEnd, 0, roadMatrix)) {
                 stepCounter = movementPlan.size() - 1;
@@ -158,6 +156,7 @@ public class Enemy extends Character{
             scroll(movementPlan.get(stepCounter));
             stepCounter--;
         }
+        
     }
 
     public void scroll(Side side){
