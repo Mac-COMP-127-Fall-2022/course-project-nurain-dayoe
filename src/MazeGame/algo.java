@@ -18,7 +18,6 @@ public class algo {
 
     public algo(){
         beginningPoint = new Point(rand.nextInt(1, 11), rand.nextInt(1, 11));
-        System.out.println(beginningPoint);
         destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
         createPath(beginningPoint, destinationPoint);
         createPath(new Point (89, 12), new Point(2, 95));
@@ -27,6 +26,7 @@ public class algo {
 
     public GraphicsGroup getMaze() {
         GraphicsGroup group = new GraphicsGroup();
+        matrix[(int) destinationPoint.getX()][(int) destinationPoint.getY()]=1;
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 100; y++){
                 if (matrix[x][y] == 0) {
@@ -34,6 +34,7 @@ public class algo {
                 }
             }
         }
+        
         return group;
     }
 

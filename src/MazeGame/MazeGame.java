@@ -104,6 +104,20 @@ public class MazeGame {
         }else if (key == Key.LEFT_ARROW){
             scroll(Side.LEFT);
         }
+        Rectangle temp = new Rectangle(0,0,40,40);
+        temp.setPosition(algo.getEndingPoint().getX()*40-3000,(algo.getEndingPoint().getY()*40)-3000);
+        canvas.add(temp);
+        double deltaX = Math.abs(zelda.getGraphics().getCenter().getX()-((algo.getEndingPoint().getX()*40)-3000+20));
+        double deltaY = Math.abs(zelda.getGraphics().getCenter().getY()-((algo.getEndingPoint().getY()*40)-3000+20));
+        System.out.println(deltaX);
+        System.out.println(deltaY);
+
+        System.out.println("_________");
+        if (deltaX<=10 && deltaY<=10){
+            canvas.removeAll();
+            resetGame();
+            System.out.println( "Level passed ");
+        }
     }
 
     public void scroll(Side side){
