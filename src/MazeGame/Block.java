@@ -24,8 +24,8 @@ public class Block {
     public static final HashMap<Environments, String[]> fourBlockEnvironments = new HashMap<>(Map.of(Environments.BIG_ROCK, BIG_ROCK, Environments.TREE, TREE, Environments.HOUSE1, HOUSE1, Environments.HOUSE2, HOUSE2));
 
     private static final Random rand = new Random();
-    private static int[][] matrix; //The 2D array of 1s and 0s which represents the maze
-    private static Block[][] blocks = new Block[algo.MAZE_SIZE][algo.MAZE_SIZE]; //The 2D array storing the block objects
+    private static boolean[][] roadMatrix; //The 2D array of 1s and 0s which represents the maze
+    private static Block[][] blocks = new Block[MazeGenerator.MAZE_SIZE][MazeGenerator.MAZE_SIZE]; //The 2D array storing the block objects
 
     private boolean road, environmentSet = false;
     private Image graphic;
@@ -35,12 +35,12 @@ public class Block {
      * A builder method to initalize the matrix with Block objects that are either roads or not roads.
      * @param matrix A 2D array of 1s and 0s representing the maze assumed to be square of size MAZE_SIZE.
      */
-    public static void buildMaze(int[][] matrix) {
-        Block.matrix = matrix;
+    public static void buildMaze(boolean[][] roadMatrix) {
+        Block.roadMatrix = roadMatrix;
 
-        for (int x = 0; x < algo.MAZE_SIZE; x++) {
-            for (int y = 0; y < algo.MAZE_SIZE; y++) {
-                if (matrix[x][y] == 0) {
+        for (int x = 0; x < MazeGenerator.MAZE_SIZE; x++) {
+            for (int y = 0; y < MazeGenerator.MAZE_SIZE; y++) {
+                if (!roadMatrix[x][y]) {
                     blocks[x][y] = new Block(false, x, y);
                 } else {
                     blocks[x][y] = new Block(true, x, y);
@@ -48,8 +48,8 @@ public class Block {
             }
         }
 
-        for (int x = 0; x < algo.MAZE_SIZE; x++) {
-            for (int y = 0; y < algo.MAZE_SIZE; y++) {
+        for (int x = 0; x < MazeGenerator.MAZE_SIZE; x++) {
+            for (int y = 0; y < MazeGenerator.MAZE_SIZE; y++) {
                 blocks[x][y].setEnvironment();
             }
         }
@@ -82,10 +82,10 @@ public class Block {
      * @param road Whether this block is a road or not
      */
     private Block (boolean road, int x, int y) {
-        if (Block.matrix == null) { //in the theoretically impossible case this constructor is called without first calling buildMaze(), an error is thrown.
+        if (Block.roadMatrix == null) { //in the theoretically impossible case this constructor is called without first calling buildMaze(), an error is thrown.
             throw new IllegalStateException();
         }
-        if (x < 0 || y < 0 || x > algo.MAZE_SIZE || y > algo.MAZE_SIZE) { //x and y must be within
+        if (x < 0 || y < 0 || x > MazeGenerator.MAZE_SIZE || y > MazeGenerator.MAZE_SIZE) { //x and y must be within
             throw new IllegalArgumentException();
         }
         if (road) { //if the block is a road, its graphic remains null and its environment does not need to be set
@@ -133,7 +133,7 @@ public class Block {
      * @return true if the Blocks to the right, bottom, and bottom right are not set and not roads.
      */
     private boolean isSpaceForLargeBlock() {
-        if (x < algo.MAZE_SIZE - 2 && y < algo.MAZE_SIZE - 2) {
+        if (x < MazeGenerator.MAZE_SIZE - 2 && y < MazeGenerator.MAZE_SIZE - 2) {
             for (int i = x; i < x + 2; i++) {
                 for (int j = y; j < y + 2; j++) {
                     if (blocks[i][j].isRoad() || blocks[i][j].isSet()) {

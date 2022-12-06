@@ -1,145 +1,147 @@
 package MazeGame;
 
 import edu.macalester.graphics.*;
+import java.util.*;
 
-import java.util.Scanner;
+import MazeGame.MazeGame.Side;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Random;
-
-@Deprecated
+/**
+ * A non-instantiable class to generate a random 100 unit by 100 unit maze.
+ */
 public class MazeGenerator {
-    public GraphicsGroup mazeMap;
-    private byte[][] mazePattern = new byte[100][100];
-    private Random rand = new Random();
+    public static final int MAZE_SIZE = 100;
 
-    public MazeGenerator(){
+    private static boolean[][] roadMatrix = new boolean[MAZE_SIZE][MAZE_SIZE];
+    private static ArrayList<Point> referencePoints = new ArrayList<Point>();
+    private static boolean firstIteration = true;
+    private static Random rand = new Random();
+    private static Point beginningPoint;
+    private static Point destinationPoint;
 
-        mazeMap = new GraphicsGroup();
-        Scanner fileScanner;
-        Double[][] imageBluePrintMatrix = new Double[100][100];
-        try {
-            fileScanner = new Scanner(new File("bgDataSet.csv"));
-            fileScanner.useDelimiter(",");   
-            int counter = 0;
-            while (fileScanner.hasNext())  
-                {  
-                    int row = Math.floorDiv(counter, 100);
-                    int column = counter%100;
-                    //System.out.println(row + " "+ column);
-                    imageBluePrintMatrix[row][column] = Double.valueOf(fileScanner.next());
-                    counter +=1;
-                }    
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }  
-        Double[][] bluePrintMatrix = new Double[100][100];
-        try {
-            fileScanner = new Scanner(new File("sample3.csv"));
-            fileScanner.useDelimiter(",");   
-            int counter = 0;
-            while (fileScanner.hasNext())  
-                {  
-                    int row = Math.floorDiv(counter, 100);
-                    int column = counter%100;
-                    //System.out.println(row + " "+ column);
-                    bluePrintMatrix[row][column] = Double.valueOf(fileScanner.next());
-                    counter +=1;
-                }    
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }  
+    //constructor is intentionally empty and private
+    private MazeGenerator() {
 
-        int rowIndex = 0;
-        int columnIndex = 0;
-        int pos = 40;
-        
-        
-        for (Double[] row:bluePrintMatrix){
-            
-            for(Double i: row){
+    }
 
-                String img1Path = "resPack/"+ imageBluePrintMatrix[rowIndex][columnIndex].intValue() + ".jpg";
-                
-                if (i==0){
-                    Image tmp = new Image(img1Path);
-                    tmp.setPosition(rowIndex*pos, columnIndex*pos);
-                    mazeMap.add(tmp);
-              
+    public static void generateMaze(){
+        beginningPoint = new Point(rand.nextInt(1, 11), rand.nextInt(1, 11));
+        System.out.println(beginningPoint);
+        destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
+        createPath(beginningPoint, destinationPoint);
+        createPath(new Point (89, 12), new Point(2, 95));
+        Block.buildMaze(roadMatrix);
+    }
+
+    public static GraphicsGroup getMaze() {
+        GraphicsGroup group = new GraphicsGroup();
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 100; y++){
+                if (!roadMatrix[x][y]) {
+                    group.add(Block.getImage(x, y));
                 }
-                
-                columnIndex+=1;
             }
-            rowIndex+=1;
-            columnIndex=0;
+        }
+        return group;
+    }
+
+    public static boolean[][] getRoadMatrix() {
+        return roadMatrix.clone();
+    }
+
+    public static Point getBeginningPoint() {
+        return beginningPoint;
+    }
+
+    public static Point getEndingPoint() {
+        return destinationPoint;
+    }
+
+    private static void createPath(Point initial, Point last) {
+        firstIteration = true;
+        for (int x = 1; x < 25; x += 1) {
+            Point point1, point2;
+            if (firstIteration) {
+                point1 = initial;
+                point2 = last;
+            } else {
+                if (!referencePoints.isEmpty()) {
+                    int randomIndex = rand.nextInt(referencePoints.size());
+                    point1 = referencePoints.get(randomIndex);
+                    referencePoints.remove(randomIndex);
+                } else {
+                    point1 = new Point(rand.nextInt(MAZE_SIZE), rand.nextInt(MAZE_SIZE));
+                }
+                point2 = new Point(rand.nextInt(MAZE_SIZE), rand.nextInt(MAZE_SIZE));
+            }
+
+            while ((point1.getX() != point2.getX() || point1.getY() != point2.getY())) {
+                point1 = movePointer(point1, point2, x);
+                if (rand.nextFloat() > 0.01) {
+                    referencePoints.add(point1);
+                }
+            }
         }
     }
 
-        public GraphicsGroup getMap() {
-            return mazeMap;
+    private static ArrayList<Side> generateWeights(Point p1, Point p2) {
+        ArrayList<Side> weights = new ArrayList<MazeGame.Side>(4);
+        if (p2.getX() > p1.getX()) {
+            weights.add(Side.RIGHT);
+        } else if (p2.getX() < p1.getX()){
+            weights.add(Side.LEFT);
         }
+
+        if (p2.getY() > p1.getY()) {
+            weights.add(Side.UP);
+        } else if (p2.getY() < p1.getY()){
+            weights.add(Side.DOWN);
+        }
+
+        return weights;
     }
 
+    private static Point movePointer(Point point1, Point point2, int layerLabel) {
+        ArrayList<Side> weights = generateWeights(point1, point2);
+        int[] currentPoint = {(int) point1.getX(), (int) point1.getY()};
+        if (firstIteration) {
+            firstIteration = false;
+        }
+        if (!roadMatrix[currentPoint[0]][currentPoint[1]]) {
+            roadMatrix[currentPoint[0]][currentPoint[1]] = true;
+        }
+        Side moveDirection = weights.get(rand.nextInt(weights.size()));
+
+        if (rand.nextFloat() < 0.2) { //allow a 20% chance that the direction is randomly picked, allowing for the option of a "wrong" direction
+            moveDirection = Side.values()[rand.nextInt(4)];
+        }
+
+        switch (moveDirection) {
+            case RIGHT:
+                if (currentPoint[0] < MAZE_SIZE - 1) {
+                    currentPoint[0]++;
+                }
+                    break;
+            case UP:
+                if (currentPoint[1] < MAZE_SIZE - 1) {
+                    currentPoint[1]++;
+                }
+                break;
+            case LEFT:
+                if (currentPoint[0] > 0) {
+                    currentPoint[0]--;
+                }
+                break;
+            case DOWN:
+            if (currentPoint[1] > 0) {
+                currentPoint[1]--;
+            }
+                break;
+            default:
+                break;
+        }
+
+        return new Point(currentPoint[0], currentPoint[1]);
+    }
+}
 
 
-        // for (int x = 0; x < 100; x++) {
-        //     for (int y = 0; y < 100; y++) {
-        //         if (x == 0 || y == 0 || x == 99 || y == 99) {
-        //             mazePattern[x][y] = 1;
-        //         } else {
-        //             mazePattern[x][y] = 0;
-        //         }
-        //     }
-        // }
-
-        // generateMaze(1,98,1,98);
-
-        // int row = 0, column = 0, width = 40;
-        // for (byte[] cells : mazePattern) {
-        //     for (byte cell : cells) {
-        //         if (cell == 1) {
-        //             Image temp = new Image("grass.jpg");
-        //             temp.setPosition(row * width, column * width);
-        //             mazeMap.add(temp);
-        //         }
-        //         column++;
-        //     }
-        //     column = 0;
-        //     row++;
-        // }
-    
-
-    // private void generateMaze(int minX, int maxX, int minY, int maxY) {
-    //     if (minX + 1 >= maxX || minY + 1 >= maxY) {
-    //         return;
-    //     }
-
-    //     int column = rand.nextInt(minX + 1, maxX);
-    //     for (int i = minY; i <= maxY; i++) {
-    //         mazePattern[column][i] = 1;
-    //     }
-
-    //     int row = rand.nextInt(minY + 1, maxY);
-    //     for (int i = minX; i <= maxX; i++) {
-    //         mazePattern[i][row] = 1;
-    //     }
-
-    //     int skipNumber = rand.nextInt(0,4);
-    //     if (skipNumber != 0 && row > minY) {
-    //         mazePattern[column][rand.nextInt(minY, row)] = 0;
-    //     }
-    //     if (skipNumber != 1 && maxY > row + 1) {
-    //         mazePattern[column][rand.nextInt(row + 1, maxY)] = 0;
-    //     }
-    //     if (skipNumber != 2 && column > minX) {
-    //         mazePattern[rand.nextInt(minX, column)][row] = 0;
-    //     }
-    //     if (skipNumber != 3 && maxX > column + 1) {
-    //         mazePattern[rand.nextInt(column + 1, maxX )][row] = 0;
-    //     }
-    //     generateMaze(minX, column - 2, minY, row - 2);
-    //     generateMaze(column + 2, maxX, minY, row - 2);
-    //     generateMaze(column + 2, maxX, row + 2, maxY);
-    //     generateMaze(minX, column - 2, row + 2, maxY);
-    // }

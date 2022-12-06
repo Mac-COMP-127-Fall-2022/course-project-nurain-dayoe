@@ -35,14 +35,14 @@ public class Minimap {
         mapPointer.setCenter(100,100);
         destinationPointer.setCenter(windowSize - windowSize/10,  windowSize - windowSize/10);
     }
-    public void setPosition(double x, double y ){
+    public void setPlayerPosition(double x, double y ){
         double sizeRatio = 0.05;
         double xPos = (x*sizeRatio) + 10;
         double yPos = (y*sizeRatio) + 10;
         mapPointer.setCenter(xPos,yPos);
     }
 
-    public void setTargetLocation(double x, double y ){
+    public void setTargetPosition(double x, double y ){
         double sizeRatio = 0.05;
         double xPos = (x*sizeRatio) + 10;
         double yPos = (y*sizeRatio) + 10;

@@ -28,6 +28,6 @@ public class Player extends Character{
         WIDTH = graphic.getWidth();
         HEIGHT = graphic.getHeight();
 
-        minimap.setPosition(graphic.getCenter().getX(), graphic.getCenter().getY());
+        minimap.setPlayerPosition(graphic.getCenter().getX(), graphic.getCenter().getY());
     }
 }
