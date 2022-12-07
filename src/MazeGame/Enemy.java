@@ -177,6 +177,6 @@ public class Enemy extends Character{
         }
         changeImage(side);
         canvas.draw();
-        canvas.pause(1000);
+        // canvas.pause(1000);
     }
 }
