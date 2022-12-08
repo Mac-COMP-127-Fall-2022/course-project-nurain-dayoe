@@ -22,7 +22,18 @@ public class Minimap {
     */
     public Minimap(CanvasWindow canvas){
         miniMap = new GraphicsGroup();
-        mapImage = new Image("mazeminimap.jpg");
+        boolean success = false;
+        do {
+            try {
+                canvas.pause(1000);
+                mapImage = new Image("mazeminimap.jpg");
+                success = true;
+            } catch (Exception e) {
+                System.out.println(e);
+                success = false;
+            }
+        } while (!success);
+        
         mapImage.setScale(0.1,0.1);
        
         pointerSize = 7;

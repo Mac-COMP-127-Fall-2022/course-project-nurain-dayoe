@@ -38,7 +38,6 @@ public class MazeGame {
     private GraphicsGroup enemyGroup;
     private GraphicsGroup nonCollidingElements;
     private GraphicsGroup destinationGroup;
-    private Image startImageButton;
     private Image cutSceneBG;
     private Image groundBackGround; 
     private Random rand = new Random();
@@ -48,27 +47,32 @@ public class MazeGame {
     private Image destinationDoor;
     private int animationCounter = 0;
 
+    private Thread t = new Thread();
+
     /**
      * Create a new MazeGame instance starting at level 1. 
      */
     public MazeGame() {
         canvas = new CanvasWindow("Breath of the Maze", CANVAS_WIDTH, CANVAS_HEIGHT);
         level = 0;
+        
+        resetGame();
 
         canvas.onClick((i)->{
             if (cutScene1shown){
                 canvas.remove(cutSceneBG);
-                canvas.remove(startImageButton);
                 cutScene1shown = false;
             }
         });
-        resetGame();
         
         canvas.onKeyDown((key)->{
             if(!cutScene1shown) {
                 move(key.getKey());
             }
         });
+
+        
+        
     }
 
     public static void main(String[] args){
@@ -79,6 +83,12 @@ public class MazeGame {
      * Reset the board for a new level or game.
      */
     private void resetGame(){
+        t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                canvas.screenShot("res/mazeminimap.jpg");
+            }
+           });
         File mapImageFile = new File("res/mazeminimap.jpg");
         mapImageFile.delete();
         MazeGenerator.generateMaze();
@@ -91,28 +101,24 @@ public class MazeGame {
         
         maze.setScale(0.25, 0.25);
         maze.setCenter(canvas.getCenter());
-        
+        canvas.draw();
+
+        canvas.pause(2000);
+        t.start();
         canvas.pause(1000);
-        canvas.screenShot("res/mazeminimap.jpg");
         maze.setScale(1,1);
 
-        canvas.pause(1000);
+        
 
         //Start the cutscene by showing the image and button
         if (level == 0) {
             cutSceneBG = new Image(0,0,"cutscene1.jpg");
-            startImageButton = new Image("start.jpg");
         } else {
             cutSceneBG = new Image(0,0,"nextLevel.jpg");
-            startImageButton = new Image("start.jpg");
         }
-        
-        startImageButton.setCenter(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + CANVAS_HEIGHT/4);
-
-        minimap = new Minimap(canvas);
 
         nonCollidingElements = new GraphicsGroup(0, 0);
-
+        minimap = new Minimap(canvas);
         this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
 
         createEnemyCamps();
@@ -135,7 +141,6 @@ public class MazeGame {
         canvas.add(zelda.getGraphics());
         canvas.add(minimap.getGraphics());
         canvas.add(cutSceneBG);
-        canvas.add(startImageButton); 
 
         canvas.animate((i)->{
             if (!cutScene1shown) {
@@ -212,6 +217,10 @@ public class MazeGame {
         if (zelda.atDestination(side)) {
             cutScene1shown = true;
             canvas.removeAll();
+            enemyGroup.removeAll();
+            nonCollidingElements.removeAll();
+            destinationGroup.removeAll();
+            maze.removeAll();
             level++;
             resetGame();
             System.out.println("Win!");
