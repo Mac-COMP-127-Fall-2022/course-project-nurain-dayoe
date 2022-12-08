@@ -27,8 +27,10 @@ public class MazeGenerator {
     * Create a randomized 100 by 100 maze. This method must be called for the game to function.
     */
     public static void generateMaze(){
+        roadMatrix = new boolean[MAZE_SIZE][MAZE_SIZE];
+        referencePoints = new ArrayList<Point>();
+        firstIteration = true;
         beginningPoint = new Point(rand.nextInt(1, 11), rand.nextInt(1, 11));
-        System.out.println(beginningPoint);
         destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
         createPath(beginningPoint, destinationPoint);
         createPath(new Point (89, 12), new Point(2, 95));

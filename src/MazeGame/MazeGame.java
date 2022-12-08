@@ -46,6 +46,7 @@ public class MazeGame {
     private boolean cutScene1shown = true;
     public EnemyCamp[] camps = new EnemyCamp[4];
     private Image destinationDoor;
+    private int animationCounter = 0;
 
     /**
      * Create a new MazeGame instance starting at level 1. 
@@ -91,6 +92,7 @@ public class MazeGame {
         maze.setScale(0.25, 0.25);
         maze.setCenter(canvas.getCenter());
         
+        canvas.pause(1000);
         canvas.screenShot("res/mazeminimap.jpg");
         maze.setScale(1,1);
 
@@ -136,12 +138,15 @@ public class MazeGame {
         canvas.add(startImageButton); 
 
         canvas.animate((i)->{
-            if (!cutScene1shown){
-                for (EnemyCamp camp : camps) {
-                    for (Enemy enemy : camp.getEnemies()) {
-                        enemy.moveTowardPlayer();
+            if (!cutScene1shown) {
+                if (animationCounter % 10 == 0){
+                    for (EnemyCamp camp : camps) {
+                        for (Enemy enemy : camp.getEnemies()) {
+                            enemy.moveTowardPlayer();
+                        }
                     }
                 }
+                animationCounter++;
             }
         });  
     }
@@ -154,9 +159,9 @@ public class MazeGame {
         int y = pos.get(1)*40;
         int previousX = x;
         int previousY = y;
-        for (int i = 0 ; i<4; i++){
+        for (int i = 0; i < 4; i++){
             camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
-            camps[i].addToGraphicsGroup(nonCollidingElements, x, y,enemyGroup);
+            camps[i].addToGraphicsGroup(nonCollidingElements, x, y, enemyGroup);
             
             while((Math.abs(x-previousX) < 600)&&(Math.abs(y-previousY)<600)){
                 randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
@@ -204,13 +209,8 @@ public class MazeGame {
      * @param side The direction to move
      */
     public void scroll(Side side){
-        //temporary 
-        Rectangle endTarget = new Rectangle(0,0,40,40);
-        endTarget.setPosition(MazeGenerator.getEndingPoint().getX()*40-3000,(MazeGenerator.getEndingPoint().getY()*40)-3000);
-        canvas.add(endTarget);
-        //
         if (zelda.atDestination(side)) {
-            
+            cutScene1shown = true;
             canvas.removeAll();
             level++;
             resetGame();
@@ -232,7 +232,7 @@ public class MazeGame {
                     groundBackGround.setPosition(newX,newY);
                     nonCollidingElements.setPosition(newX,newY);
                     destinationGroup.setPosition(newX,newY);
-                    enemyGroup.setPosition(newX,newY);
+                    enemyGroup.setPosition(newX, newY);
                 } else {
                     zelda.move(side);
                 }

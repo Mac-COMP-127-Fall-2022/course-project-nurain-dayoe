@@ -13,6 +13,7 @@ public abstract class Character {
     protected PlayerImage animMapRight;
     protected PlayerImage animMapBack;
 
+    protected CanvasWindow canvas;
     protected Image graphic;
     protected GraphicsGroup maze, minimap;
 
@@ -22,6 +23,7 @@ public abstract class Character {
     protected double WIDTH, HEIGHT;
 
     public Character(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap,GraphicsGroup enemyGroup) {
+        this.canvas = canvas;
         this.maze = maze;
         this.minimap = minimap;
         this.enemyGroup = enemyGroup;

@@ -59,10 +59,11 @@ public class Minimap {
     * Set the end target position to the specified x and y in Block coordinates.
     */
     public void setTargetPosition(double x, double y){
+        System.out.println();
         double sizeRatio = 0.05;
         double xPos = (x*sizeRatio) + 10;
         double yPos = (y*sizeRatio) + 10;
-        mapPointer.setCenter(xPos,yPos);
+        destinationPointer.setCenter(xPos,yPos);
     }
 
     public GraphicsGroup getGraphics() {

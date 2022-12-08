@@ -10,18 +10,18 @@ import edu.macalester.graphics.*;
  */
 public class Enemy extends Character{
     private final Player mainPlayer; 
-    private static final double responseRadius = 200;
+    private static final double responseRadius = 1000;
     private EnemyCamp enemyCamp;
-
+    private GraphicsGroup enemyGroup;
     private int stepCounter = -1;
-
-    private CanvasWindow canvas;
+    //private Line line1 = new Line(0,0,0,0), line2 = new Line(0,0,0,0);
     
-    public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer, GraphicsGroup enemyGroup){
-        super(canvas, maze, minimap,enemyGroup);
+    public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer, GraphicsGroup enemyGroup, Point position){
+        super(canvas, maze, minimap, enemyGroup);
         this.enemyCamp = enemyCamp;
         this.mainPlayer = mainPlayer;
-        this.canvas = canvas;
+        this.enemyGroup = enemyGroup;
+        this.position = position;
 
         animMapFront = new PlayerImage("anim2Front.bmp", "anim3Front.bmp", "anim1Front.bmp");
         animMapLeft = new PlayerImage("anim2Left.bmp", "anim3Left.bmp", "anim1Left.bmp");
@@ -35,62 +35,53 @@ public class Enemy extends Character{
         
         graphic = new Image("anim1Front.bmp");
 
-        //TODO: Set init position
-        //graphic.setCenter(enemyCamp.getGraphics().getCenter().getX() * 40 + graphic.getWidth() * 0.25, enemyCamp.getGraphics().getCenter().getX() * 40 + graphic.getHeight() * 0.25);
         graphic.setScale(0.3);
-
-        graphic.setCenter(MazeGenerator.getBeginningPoint().getX() * 40 + 20, MazeGenerator.getBeginningPoint().getY() * 40 + 20);
         
-        canvas.add(graphic);
-        
+        // enemyGroup.add(line1);
+        // enemyGroup.add(line2);
     }
     
     public void moveTowardPlayer() {
-        position = graphic.getPosition().add(maze.getPosition().scale(-1));
-        if (distanceToPlayer() < responseRadius) {
-            if (Math.abs(mainPlayer.getGraphics().getCenter().getX() - graphic.getCenter().getX()) > Math.abs(mainPlayer.getGraphics().getCenter().getY() - graphic.getCenter().getY())) {
-                if (graphic.getCenter().getX() > mainPlayer.getGraphics().getCenter().getX()) {
-                    move(Side.LEFT);
-                } else {
-                    move(Side.RIGHT);
-                }
-            } else {
-                if (graphic.getCenter().getY() > mainPlayer.getGraphics().getCenter().getY()) {
-                    move(Side.UP);
-                } else {
-                    move(Side.DOWN);
-                }
+        double enemyCenterX = graphic.getCenter().getX();
+        double enemyCenterY = graphic.getCenter().getY();
+        double playerCenterX = mainPlayer.getGraphics().getCenter().getX() + Math.abs(maze.getX());
+        double playerCenterY = mainPlayer.getGraphics().getCenter().getY() + Math.abs(maze.getY());
+        if (distanceToPlayer(playerCenterX, playerCenterY) < responseRadius && graphic.getX() + graphic.getWidth() + enemyGroup.getX() + 20 < MazeGame.CANVAS_WIDTH && graphic.getX() + enemyGroup.getX() > 20 && graphic.getY() + enemyGroup.getY() + graphic.getHeight() + 20 < MazeGame.CANVAS_HEIGHT && graphic.getY() + enemyGroup.getX() > 20) {
+            if (enemyCenterX > playerCenterX + 10 && !collision(Side.LEFT)) {
+                //System.out.println(distanceToPlayer(playerCenterX, playerCenterY));
+                move(Side.LEFT);
+            } 
+            if (enemyCenterX + 10 < playerCenterX && !collision(Side.RIGHT)) {
+                move(Side.RIGHT);
+            }
+            if (enemyCenterY > playerCenterY + 10 && !collision(Side.UP)) {
+                move(Side.UP);
+            }
+            if (enemyCenterY + 10 < playerCenterY && !collision(Side.DOWN)) {
+                move(Side.DOWN);
             }
         }
-        
-        // if (stepCounter == -1) {
-        //     if (planMove((int) MazeGenerator.getBeginningPoint().getX(), (int) MazeGenerator.getBeginningPoint().getY(), xEnd, yEnd, 0, roadMatrix)) {
-        //         stepCounter = movementPlan.size() - 1;
-        //         System.out.println(movementPlan.get(stepCounter));
-        //         scroll(movementPlan.get(stepCounter));
-        //         stepCounter--;
-        //     }
-        // } else {
-        //     System.out.println(stepCounter);
-        //     System.out.println(movementPlan.get(stepCounter));
-        //     scroll(movementPlan.get(stepCounter));
-        //     stepCounter--;
-        // }
-        
     }
 
-    public double distanceToPlayer() {
-        double playerX = mainPlayer.getGraphics().getCenter().getX() + Math.abs(maze.getPosition().getX());
-        double playerY = mainPlayer.getGraphics().getCenter().getY() + Math.abs(maze.getPosition().getY());
-        return Math.sqrt(Math.pow((playerX - graphic.getCenter().getX()),2) + Math.pow((playerY - graphic.getCenter().getY()),2));
+    @Override
+    public void move(Side side) {
+        for (int i = 0; i < 10; i++) {
+            Point newPosition = position.add(side.getDirectionVector());
+            position = newPosition;
+            graphic.setPosition(newPosition);
+        }
+        changeImage(side);
+    }
+
+    public double distanceToPlayer(double playerCenterX, double playerCenterY) {
+        return Math.sqrt(Math.pow((playerCenterX - graphic.getCenter().getX()),2) + Math.pow((playerCenterY - graphic.getCenter().getY()),2));
     }
 
     @Override
     public boolean collision(Side side) {
         Point point1, point2, point3;
-        Point position = graphic.getPosition();
-        double x = position.add(side.getDirectionVector()).getX();
-        double y = position.add(side.getDirectionVector()).getY();
+        double x = graphic.getPosition().add(side.getDirectionVector().scale(10)).add(enemyGroup.getPosition()).getX();
+        double y = graphic.getPosition().add(side.getDirectionVector().scale(10)).add(enemyGroup.getPosition()).getY();
         
         switch (side) { //Set the collision points to check based on the direction of movement
             case RIGHT:
@@ -129,15 +120,6 @@ public class Enemy extends Character{
         
         //If the Character will hit the minimap, there is a collision
         if (minimap.getElementAt(point1) != null || minimap.getElementAt(point2) != null || minimap.getElementAt(point3) != null) {
-            return true;
-        }
-
-        //if any side of the Character would move out of bounds, there is a collision
-        Point right = new Point(x + WIDTH * 0.7, y + HEIGHT * 0.5);
-        Point left = new Point(x + WIDTH * 0.3, y + HEIGHT * 0.5);
-        Point up = new Point(x + WIDTH * 0.5, y + WIDTH * 0.3);
-        Point down = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.7);
-        if (right.getX()  >= MazeGame.CANVAS_WIDTH + Math.abs(maze.getPosition().getX()) || left.getX() <= 0 + Math.abs(maze.getPosition().getX()) || up.getY() <= 0 + Math.abs(maze.getPosition().getY()) || down.getY() >= MazeGame.CANVAS_HEIGHT + Math.abs(maze.getPosition().getY())) {
             return true;
         }
         
