@@ -36,6 +36,7 @@ public class MazeGame {
     private Minimap minimap;
     private Hearts hearts;
     private Player zelda;
+    private GraphicsGroup enemyGroup;
     private GraphicsGroup nonCollidingElements;
     private GraphicsGroup destinationGroup;
     private Image startImageButton;
@@ -86,7 +87,7 @@ public class MazeGame {
         mapImageFile.delete();
         MazeGenerator.generateMaze();
         maze = MazeGenerator.getMaze();
-        
+        enemyGroup = new GraphicsGroup(0,0);
         groundBackGround = new Image("ground.jpg");
         canvas.add(groundBackGround);
         destinationGroup = new GraphicsGroup(0,0);
@@ -123,6 +124,7 @@ public class MazeGame {
         createEnemyCamps();
         
         canvas.add(nonCollidingElements);
+        canvas.add(enemyGroup);
         
         minimap.addToCanvas(canvas);
         minimap.setTargetPosition(MazeGenerator.getEndingPoint().getX() * 40 + 20, MazeGenerator.getEndingPoint().getY() * 40 + 20);
@@ -157,7 +159,7 @@ public class MazeGame {
         int previousY = y;
         for (EnemyCamp camp: campList){
             camp = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
-            camp.addToGraphicsGroup(nonCollidingElements, x, y);
+            camp.addToGraphicsGroup(nonCollidingElements, x, y,enemyGroup);
             while((Math.abs(x-previousX) < 300)&&(Math.abs(y-previousY)<300)){
                 randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
                 pos = (List) MazeGenerator.enemyCampLocation().get(randInd);
@@ -228,6 +230,7 @@ public class MazeGame {
                     groundBackGround.setPosition(newX,newY);
                     nonCollidingElements.setPosition(newX,newY);
                     destinationGroup.setPosition(newX,newY);
+                    enemyGroup.setPosition(newX,newY);
                 } else {
                     zelda.move(side);
                 }

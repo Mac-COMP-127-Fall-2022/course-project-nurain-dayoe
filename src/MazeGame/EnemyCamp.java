@@ -41,13 +41,13 @@ public class EnemyCamp {
     public GraphicsGroup getGraphics(){
         return graphic;
     }
-    public void addToGraphicsGroup(GraphicsGroup gr,int x, int y){
+    public void addToGraphicsGroup(GraphicsGroup gr,int x, int y,GraphicsGroup enemyGroup){
         gr.add(graphic);
         graphic.setPosition(x,y);
         Point[] enemyPositions = {new Point(20,20), new Point(100,20), new Point(100,100), new Point(20,100)};
         for (int i = 0; i < 4; i++) {
             enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer);
-            maze.add(enemies[i].getGraphics());
+            enemyGroup.add(enemies[i].getGraphics());
             enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
             System.out.println(enemies[i].getGraphics().getCenter());
         }
