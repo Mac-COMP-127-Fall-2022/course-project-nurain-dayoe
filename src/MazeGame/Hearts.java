@@ -18,8 +18,8 @@ public class Hearts {
             tempHeart.setCenter(centerX, centerY);
         }
     }
-    public void addToCanvas(CanvasWindow canvas){
-        canvas.add(heartsGroup);
+    public GraphicsGroup getGraphics(){
+        return heartsGroup;
     }
     public void update(Integer heartCount,CanvasWindow canvas){
         heartsGroup.removeAll();

@@ -4,7 +4,6 @@ import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
 
 import java.util.Random;
-import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 
@@ -45,11 +44,7 @@ public class MazeGame {
     private Random rand = new Random();
     public static int level; 
     private boolean cutScene1shown = true;
-    private EnemyCamp camp1;
-    private EnemyCamp camp2; 
-    private EnemyCamp camp3;
-    private EnemyCamp camp4;
-    public List<EnemyCamp> campList;
+    public EnemyCamp[] camps = new EnemyCamp[4];
     private Image destinationDoor;
 
     /**
@@ -112,69 +107,67 @@ public class MazeGame {
         
         startImageButton.setCenter(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + CANVAS_HEIGHT/4);
 
-        minimap = new Minimap(220,canvas);
+        minimap = new Minimap(canvas);
 
         nonCollidingElements = new GraphicsGroup(0, 0);
-        campList = new ArrayList<>();
-        campList.add(camp1);
-        campList.add(camp2);
-        campList.add(camp3);
-        campList.add(camp4);
-       
+
+        this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
+
         createEnemyCamps();
-        
-        canvas.add(nonCollidingElements);
-        canvas.add(enemyGroup);
-        
-        minimap.addToCanvas(canvas);
+            
         minimap.setTargetPosition(MazeGenerator.getEndingPoint().getX() * 40 + 20, MazeGenerator.getEndingPoint().getY() * 40 + 20);
         
         destinationDoor = new Image("grass.jpg");//TODO: change it to the real door/destination image
         destinationDoor.setPosition(MazeGenerator.getEndingPoint().getX()*40,(MazeGenerator.getEndingPoint().getY()*40));
         destinationGroup.add(destinationDoor);
         
-        this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
-        
         maze.setPosition(0, 0);
         hearts = new Hearts(zelda.getHealth(), canvas);
-        hearts.addToCanvas(canvas);
 
+        canvas.add(destinationDoor);
+        
+        canvas.add(hearts.getGraphics());
+        
+        canvas.add(nonCollidingElements);
+        canvas.add(enemyGroup);
+        canvas.add(zelda.getGraphics());
+        canvas.add(minimap.getGraphics());
         canvas.add(cutSceneBG);
-        canvas.add(startImageButton);
+        canvas.add(startImageButton); 
 
-        
-        // canvas.animate((i)->{
-        //     if (!cutScene1shown){
-        //         enemy.moveTowardPlayer();
-        //     }
-        // });
-        
+        canvas.animate((i)->{
+            if (!cutScene1shown){
+                for (EnemyCamp camp : camps) {
+                    for (Enemy enemy : camp.getEnemies()) {
+                        enemy.moveTowardPlayer();
+                    }
+                }
+            }
+        });  
     }
+
+
     public void createEnemyCamps(){
         int randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
-        List<Integer> pos = (List) MazeGenerator.enemyCampLocation().get(randInd);
+        List<Integer> pos = MazeGenerator.enemyCampLocation().get(randInd);
         int x = pos.get(0)*40;
         int y = pos.get(1)*40;
         int previousX = x;
         int previousY = y;
-        for (EnemyCamp camp: campList){
-            camp = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
-            camp.addToGraphicsGroup(nonCollidingElements, x, y,enemyGroup);
-            while((Math.abs(x-previousX) < 300)&&(Math.abs(y-previousY)<300)){
+        for (int i = 0 ; i<4; i++){
+            camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
+            camps[i].addToGraphicsGroup(nonCollidingElements, x, y,enemyGroup);
+            
+            while((Math.abs(x-previousX) < 600)&&(Math.abs(y-previousY)<600)){
                 randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
-                pos = (List) MazeGenerator.enemyCampLocation().get(randInd);
+                pos = MazeGenerator.enemyCampLocation().get(randInd);
                 x = pos.get(0)*40;
                 y = pos.get(1)*40;
 
             }
             previousX = x;
             previousY = y;
-            
-        }
-       
-        
-
-        
+        }  
     }
     /**
      * Move the Player in the direction of the key pressed by SPEED pixels.
@@ -211,7 +204,13 @@ public class MazeGame {
      * @param side The direction to move
      */
     public void scroll(Side side){
+        //temporary 
+        Rectangle endTarget = new Rectangle(0,0,40,40);
+        endTarget.setPosition(MazeGenerator.getEndingPoint().getX()*40-3000,(MazeGenerator.getEndingPoint().getY()*40)-3000);
+        canvas.add(endTarget);
+        //
         if (zelda.atDestination(side)) {
+            
             canvas.removeAll();
             level++;
             resetGame();

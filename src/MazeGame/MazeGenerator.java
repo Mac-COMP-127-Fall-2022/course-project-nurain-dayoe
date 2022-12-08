@@ -52,11 +52,10 @@ public class MazeGenerator {
     }
 
     /**
-    * Check if the inputted x and y coordinates mark the top-left corner of a 2 by 2 square of empty space on the map.
-    * @return true if the Block at the given position, at the right, at the bottom, and at the bottom-right is a road.
+    * Check if the inputted x and y coordinates mark the top-left corner of a 3 by 3 square of empty space on the map.
     */
     public static boolean checkForSpace(int x, int y){
-        if (x<=97 && y<=97){
+        if (x <= 97 && y <= 97){
             if (roadMatrix[x][y] && roadMatrix[x+1][y] && roadMatrix[x+2][y]){
                 if (roadMatrix[x][y+1] && roadMatrix[x+1][y+1] && roadMatrix[x+2][y+1]){
                     if (roadMatrix[x][y+2] && roadMatrix[x+1][y+2] && roadMatrix[x+2][y+2]){
@@ -68,13 +67,13 @@ public class MazeGenerator {
         return false;
     }
 
-    public static List enemyCampLocation(){
-        List domain = new ArrayList<>();
+    public static ArrayList<ArrayList<Integer>> enemyCampLocation(){
+        ArrayList<ArrayList<Integer>> domain = new ArrayList<>();
 
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 100; y++){
                 if (checkForSpace(x, y)) {
-                    List temp = new ArrayList<>();
+                    ArrayList<Integer> temp = new ArrayList<>();
                     temp.add(x);
                     temp.add(y);
                     domain.add(temp);

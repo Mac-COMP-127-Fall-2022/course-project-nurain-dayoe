@@ -36,8 +36,8 @@ public class EnemyCamp {
         this.minimap = minimap;
         this.mainPlayer = mainPlayer;
         createGraphic();
-        
     }
+    
     public GraphicsGroup getGraphics(){
         return graphic;
     }
@@ -51,6 +51,7 @@ public class EnemyCamp {
             enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
             System.out.println(enemies[i].getGraphics().getCenter());
         }
+        
     }
     private void createGraphic(){
         graphic.add(img0_0);
@@ -71,6 +72,10 @@ public class EnemyCamp {
         img1_2.setPosition(40,80);
         graphic.add(img2_2);
         img2_2.setPosition(80,80);
+    }
+
+    public Enemy[] getEnemies() {
+        return enemies;
     }
     
 }

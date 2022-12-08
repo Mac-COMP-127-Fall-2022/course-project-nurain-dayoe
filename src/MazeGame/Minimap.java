@@ -8,7 +8,7 @@ import edu.macalester.graphics.*;
 * A class representing a Minimap with the Player's real-time position and destination marked.
 */
 public class Minimap {
-    public static int test;
+    public final static double windowSize = 220;
     private GraphicsGroup miniMap;
     private Image mapImage;
     private Ellipse mapPointer;
@@ -20,7 +20,7 @@ public class Minimap {
     /**
     * Create a new Minimap in the top-right of the CanvasWindow.
     */
-    public Minimap(double windowSize, CanvasWindow c){
+    public Minimap(CanvasWindow canvas){
         miniMap = new GraphicsGroup();
         mapImage = new Image("mazeminimap.jpg");
         mapImage.setScale(0.1,0.1);
@@ -28,7 +28,7 @@ public class Minimap {
         pointerSize = 7;
         mapPointer = new Ellipse(0, 0, pointerSize, pointerSize);
         destinationPointer = new Rectangle(0, 0, pointerSize, pointerSize);
-        border = new Rectangle(0,0,windowSize, windowSize);
+        border = new Rectangle(0, 0, Minimap.windowSize, Minimap.windowSize);
         
         mapPointer.setFillColor(Color.RED);
         destinationPointer.setFillColor(Color.YELLOW);
@@ -37,10 +37,12 @@ public class Minimap {
         miniMap.add(border);
         miniMap.setPosition(0,0);
         miniMap.add(mapImage);
-        mapImage.setCenter(windowSize/2, windowSize/2);
+        mapImage.setCenter(Minimap.windowSize/2, Minimap.windowSize/2);
 
         miniMap.add(destinationPointer);
         miniMap.add(mapPointer);
+
+        miniMap.setPosition(canvas.getWidth()-miniMap.getWidth() -20 ,  20);
     }
 
     /**
@@ -61,14 +63,6 @@ public class Minimap {
         double xPos = (x*sizeRatio) + 10;
         double yPos = (y*sizeRatio) + 10;
         mapPointer.setCenter(xPos,yPos);
-    }
-    
-    /**
-    * Add the miniMap to the canvas in the correct position
-    */
-    public void addToCanvas(CanvasWindow canvas){
-        canvas.add(miniMap);
-        miniMap.setPosition(canvas.getWidth()-miniMap.getWidth() -20 ,  20);
     }
 
     public GraphicsGroup getGraphics() {
