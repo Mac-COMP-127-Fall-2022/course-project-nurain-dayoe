@@ -17,8 +17,8 @@ public class Enemy extends Character{
 
     private CanvasWindow canvas;
     
-    public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer){
-        super(canvas, maze, minimap);
+    public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer,GraphicsGroup enemyGroup){
+        super(canvas, maze, minimap,enemyGroup);
         this.enemyCamp = enemyCamp;
         this.mainPlayer = mainPlayer;
 

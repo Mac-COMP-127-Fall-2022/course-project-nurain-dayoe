@@ -4,7 +4,7 @@ import edu.macalester.graphics.*;
 
 public class EnemyCamp {
     private GraphicsGroup graphic = new GraphicsGroup();
-    private Enemy[] enemies = new Enemy[4];
+    public Enemy[] enemies = new Enemy[4];
     
     // private Image img0_0 = new Image("enemyCamp0_0.jpg");
     // private Image img1_0 = new Image("enemyCamp1_0.jpg");
@@ -46,7 +46,7 @@ public class EnemyCamp {
         graphic.setPosition(x,y);
         Point[] enemyPositions = {new Point(20,20), new Point(100,20), new Point(100,100), new Point(20,100)};
         for (int i = 0; i < 4; i++) {
-            enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer);
+            enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer,enemyGroup);
             enemyGroup.add(enemies[i].getGraphics());
             enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
             System.out.println(enemies[i].getGraphics().getCenter());

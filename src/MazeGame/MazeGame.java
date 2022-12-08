@@ -49,7 +49,7 @@ public class MazeGame {
     private EnemyCamp camp2; 
     private EnemyCamp camp3;
     private EnemyCamp camp4;
-    private List<EnemyCamp> campList;
+    public List<EnemyCamp> campList;
     private Image destinationDoor;
 
     /**
@@ -67,7 +67,7 @@ public class MazeGame {
             }
         });
         resetGame();
-
+        
         canvas.onKeyDown((key)->{
             if(!cutScene1shown) {
                 move(key.getKey());
@@ -120,7 +120,7 @@ public class MazeGame {
         campList.add(camp2);
         campList.add(camp3);
         campList.add(camp4);
-
+       
         createEnemyCamps();
         
         canvas.add(nonCollidingElements);
@@ -133,7 +133,7 @@ public class MazeGame {
         destinationDoor.setPosition(MazeGenerator.getEndingPoint().getX()*40,(MazeGenerator.getEndingPoint().getY()*40));
         destinationGroup.add(destinationDoor);
         
-        this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint());
+        this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
         
         maze.setPosition(0, 0);
         hearts = new Hearts(zelda.getHealth(), canvas);
@@ -171,6 +171,9 @@ public class MazeGame {
             previousY = y;
             
         }
+       
+        
+
         
     }
     /**
@@ -236,7 +239,6 @@ public class MazeGame {
                 }
             }
         }
-
         minimap.setPlayerPosition(zelda.getGraphics().getCenter().getX() + Math.abs(maze.getPosition().getX()), zelda.getGraphics().getCenter().getY() + Math.abs(maze.getPosition().getY()));
         zelda.changeImage(side);
     }

@@ -11,8 +11,8 @@ public class Player extends Character{
     /**
      * Generate a new player at the given inital position within the canvas.
      */
-    public Player(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup destinationGroup, Minimap minimap, Point initialPosition){
-        super(canvas, maze, minimap.getGraphics());
+    public Player(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup destinationGroup, Minimap minimap, Point initialPosition,GraphicsGroup enemyGroup){
+        super(canvas, maze, minimap.getGraphics(),enemyGroup);
         this.healthStatus = 5;
         this.destinationGroup = destinationGroup;
 

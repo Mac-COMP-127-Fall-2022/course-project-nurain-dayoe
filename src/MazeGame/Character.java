@@ -18,12 +18,13 @@ public abstract class Character {
 
     protected Point position;
     protected int healthStatus;
-
+    protected GraphicsGroup enemyGroup;
     protected double WIDTH, HEIGHT;
 
-    public Character(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap) {
+    public Character(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap,GraphicsGroup enemyGroup) {
         this.maze = maze;
         this.minimap = minimap;
+        this.enemyGroup = enemyGroup;
     }
 
     public Image getGraphics() {
@@ -122,7 +123,9 @@ public abstract class Character {
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
             return true;
         }
-
+        if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
+            return true;
+        }
         //If the Character will hit the minimap, there is a collision
         if (minimap.getElementAt(point1) != null || minimap.getElementAt(point2) != null || minimap.getElementAt(point3) != null) {
             return true;
