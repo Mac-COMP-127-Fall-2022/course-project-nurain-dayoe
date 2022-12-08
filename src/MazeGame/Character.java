@@ -14,15 +14,16 @@ public abstract class Character {
     protected PlayerImage animMapBack;
 
     protected Image graphic;
-    protected GraphicsGroup maze;
+    protected GraphicsGroup maze, minimap;
 
     protected Point position;
     protected int healthStatus;
 
     protected double WIDTH, HEIGHT;
 
-    public Character(CanvasWindow canvas, GraphicsGroup maze) {
+    public Character(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap) {
         this.maze = maze;
+        this.minimap = minimap;
     }
 
     public Image getGraphics() {
@@ -117,8 +118,13 @@ public abstract class Character {
         // line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
         // line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
         
-        //If there is an obstacle at any checked point, there will be a collision
+        //If there is an obstacle at any checked point, there is a collision
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
+            return true;
+        }
+
+        //If the Character will hit the minimap, there is a collision
+        if (minimap.getElementAt(point1) != null || minimap.getElementAt(point2) != null || minimap.getElementAt(point3) != null) {
             return true;
         }
 

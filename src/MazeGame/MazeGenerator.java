@@ -23,6 +23,9 @@ public class MazeGenerator {
 
     }
 
+    /**
+    * Create a randomized 100 by 100 maze. This method must be called for the game to function.
+    */
     public static void generateMaze(){
         beginningPoint = new Point(rand.nextInt(1, 11), rand.nextInt(1, 11));
         System.out.println(beginningPoint);
@@ -32,7 +35,11 @@ public class MazeGenerator {
         Block.buildMaze(roadMatrix);
     }
 
+    /**
+    * Return a GraphicsGroup containing the block objects of the maze.
+    */
     public static GraphicsGroup getMaze() {
+        roadMatrix[(int)destinationPoint.getX()] [ (int)destinationPoint.getY()] = true;
         GraphicsGroup group = new GraphicsGroup();
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 100; y++){
@@ -42,6 +49,41 @@ public class MazeGenerator {
             }
         }
         return group;
+    }
+
+    /**
+    * Check if the inputted x and y coordinates mark the top-left corner of a 2 by 2 square of empty space on the map.
+    * @return true if the Block at the given position, at the right, at the bottom, and at the bottom-right is a road.
+    */
+    public static boolean checkForSpace(int x, int y){
+        if (x<=97 && y<=97){
+            if (roadMatrix[x][y] && roadMatrix[x+1][y] && roadMatrix[x+2][y]){
+                if (roadMatrix[x][y+1] && roadMatrix[x+1][y+1] && roadMatrix[x+2][y+1]){
+                    if (roadMatrix[x][y+2] && roadMatrix[x+1][y+2] && roadMatrix[x+2][y+2]){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List enemyCampLocation(){
+        List domain = new ArrayList<>();
+
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 100; y++){
+                if (checkForSpace(x, y)) {
+                    List temp = new ArrayList<>();
+                    temp.add(x);
+                    temp.add(y);
+                    domain.add(temp);
+                    
+                }
+            }
+        }
+        
+        return domain;
     }
 
     public static boolean[][] getRoadMatrix() {
@@ -55,7 +97,10 @@ public class MazeGenerator {
     public static Point getEndingPoint() {
         return destinationPoint;
     }
-
+    
+    /**
+    * Create a path with false paths branching off it between the given points.
+    */
     private static void createPath(Point initial, Point last) {
         firstIteration = true;
         for (int x = 1; x < 25; x += 1) {
@@ -64,25 +109,28 @@ public class MazeGenerator {
                 point1 = initial;
                 point2 = last;
             } else {
-                if (!referencePoints.isEmpty()) {
+                if (!referencePoints.isEmpty()) { //when this method is first run, make the inital point the reference
                     int randomIndex = rand.nextInt(referencePoints.size());
                     point1 = referencePoints.get(randomIndex);
                     referencePoints.remove(randomIndex);
-                } else {
+                } else { //otherwise, choose a random reference point
                     point1 = new Point(rand.nextInt(MAZE_SIZE), rand.nextInt(MAZE_SIZE));
-                }
+                } //make the second point random as well
                 point2 = new Point(rand.nextInt(MAZE_SIZE), rand.nextInt(MAZE_SIZE));
             }
 
-            while ((point1.getX() != point2.getX() || point1.getY() != point2.getY())) {
-                point1 = movePointer(point1, point2, x);
-                if (rand.nextFloat() > 0.01) {
+            while ((point1.getX() != point2.getX() || point1.getY() != point2.getY())) { //as long as the points are not the same, build the road between them
+                point1 = movePointer(point1, point2);
+                if (rand.nextFloat() > 0.01) { //In most cases, make point 1 a reference point
                     referencePoints.add(point1);
                 }
             }
         }
     }
 
+    /**
+    * An internal methods to generate the directions the path should travel.
+    */
     private static ArrayList<Side> generateWeights(Point p1, Point p2) {
         ArrayList<Side> weights = new ArrayList<MazeGame.Side>(4);
         if (p2.getX() > p1.getX()) {
@@ -100,7 +148,10 @@ public class MazeGenerator {
         return weights;
     }
 
-    private static Point movePointer(Point point1, Point point2, int layerLabel) {
+    /**
+    * An internal method to move the maze paths along by one unit.
+    */
+    private static Point movePointer(Point point1, Point point2) {
         ArrayList<Side> weights = generateWeights(point1, point2);
         int[] currentPoint = {(int) point1.getX(), (int) point1.getY()};
         if (firstIteration) {
@@ -115,7 +166,7 @@ public class MazeGenerator {
             moveDirection = Side.values()[rand.nextInt(4)];
         }
 
-        switch (moveDirection) {
+        switch (moveDirection) { //move in the randomly generated direction
             case RIGHT:
                 if (currentPoint[0] < MAZE_SIZE - 1) {
                     currentPoint[0]++;
