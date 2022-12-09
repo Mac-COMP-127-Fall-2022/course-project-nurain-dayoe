@@ -63,6 +63,18 @@ public class Player extends Character{
         return false;
     }
 
+    /**
+     * Move the player one pixel to the specfied side, if there is no collision.
+     */
+    @Override
+    public void move(MazeGame.Side side) {
+        if (!collision(side)) {
+            Point newPosition = position.add(side.getDirectionVector());
+            position = newPosition;
+            graphic.setPosition(newPosition);
+        }
+    }
+
     @Override
     public boolean collision(MazeGame.Side side) {
         Point point1, point2, point3;

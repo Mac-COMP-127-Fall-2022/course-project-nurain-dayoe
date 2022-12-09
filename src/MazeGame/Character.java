@@ -75,13 +75,7 @@ public abstract class Character {
     /**
      * Move this Character's graphic in the specified direction
      */
-    public void move(MazeGame.Side side) {
-        if (!collision(side)) {
-            Point newPosition = position.add(side.getDirectionVector());
-            position = newPosition;
-            graphic.setPosition(newPosition);
-        }
-    }
+    public abstract void move(MazeGame.Side side);
 
     /**
      * Check whether this Character will collide with a maze wall if it moves one unit to the specified side.

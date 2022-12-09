@@ -65,12 +65,9 @@ public class MazeGame {
         
         canvas.onKeyDown((key)->{
             if(!cutSceneShown) { 
-                move(key.getKey());
+                scroll(key.getKey());
             }
-        });
-
-        
-        
+        });        
     }
 
     public static void main(String[] args){
@@ -87,15 +84,20 @@ public class MazeGame {
             public void run() {
                 canvas.screenShot("res/mazeminimap.jpg");
             }
-           });
+        });
+
         File mapImageFile = new File("res/mazeminimap.jpg");
         mapImageFile.delete();
+
         MazeGenerator.generateMaze();
         maze = MazeGenerator.getMaze();
+
         enemyGroup = new GraphicsGroup(0,0);
-        groundBackGround = new Image("ground.jpg");
-        canvas.add(groundBackGround);
         destinationGroup = new GraphicsGroup(0,0);
+        destinationDoor = new Image("resPack/destinationdoor1.jpg");
+        groundBackGround = new Image("ground.jpg");
+        
+        canvas.add(groundBackGround);
         canvas.add(maze);
         
         maze.setScale(0.25, 0.25);
@@ -123,9 +125,8 @@ public class MazeGame {
         createEnemyCamps();
             
         minimap.setTargetPosition(MazeGenerator.getEndingPoint().getX() * 40 + 20, MazeGenerator.getEndingPoint().getY() * 40 + 20);
-        
-        destinationDoor = new Image("resPack/destinationdoor1.jpg");//TODO: change it to the real door/destination image
         destinationDoor.setPosition(MazeGenerator.getEndingPoint().getX()*40,(MazeGenerator.getEndingPoint().getY()*40));
+        
         destinationGroup.add(destinationDoor);
         
         maze.setPosition(0, 0);
@@ -177,7 +178,7 @@ public class MazeGame {
         int previousY = y;
         for (int i = 0; i < 4; i++){
             camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
-            camps[i].addToGraphicsGroup(nonCollidingElements, x, y, enemyGroup);
+            camps[i].populateEnemies(x, y, nonCollidingElements, enemyGroup);
             
             while((Math.abs(x-previousX) < 600)&&(Math.abs(y-previousY)<600)){
                 randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
@@ -188,55 +189,34 @@ public class MazeGame {
             }
             previousX = x;
             previousY = y;
-        }  
-    }
-    /**
-     * Move the Player in the direction of the key pressed by SPEED pixels.
-     * @param key The key pressed
-     */
-    public void move(Key key) {
-        if (key == Key.UP_ARROW){
-            scroll(Side.UP);
-        } else if(key == Key.DOWN_ARROW){
-            scroll(Side.DOWN);
-        } else if (key == Key.RIGHT_ARROW){
-            scroll(Side.RIGHT);
-        } else if (key == Key.LEFT_ARROW){
-            scroll(Side.LEFT);
         }
-
-        
-
-        // Rectangle endTarget = new Rectangle(0,0,40,40);
-        // endTarget.setPosition(MazeGenerator.getEndingPoint().getX()*40-3000,(MazeGenerator.getEndingPoint().getY()*40)-3000);
-        // canvas.add(endTarget);
-        // double deltaX = Math.abs(zelda.getGraphics().getCenter().getX()-((MazeGenerator.getEndingPoint().getX()*40)-3000+20));
-        // double deltaY = Math.abs(zelda.getGraphics().getCenter().getY()-((MazeGenerator.getEndingPoint().getY()*40)-3000+20));
-        // if (deltaX<=10 && deltaY<=10){
-        //     canvas.removeAll();
-        //     level++;
-        //     resetGame();
-        //     System.out.println( "Level passed ");
-        // }
     }
 
     /**
-     * Move the background and maze or move the Player directly.
+     * Move the background and maze or move the Player directly so the Player's position moves SPEED pixels.
      * @param side The direction to move
      */
-    public void scroll(Side side){
-        if (zelda.atDestination(side)) {
-            cutSceneShown = true;
-            canvas.removeAll();
-            enemyGroup.removeAll();
-            nonCollidingElements.removeAll();
-            destinationGroup.removeAll();
-            maze.removeAll();
-            level++;
-            resetGame();
-            System.out.println("Win!");
+    public void scroll(Key key){
+        Side side;
+
+        if (key == Key.UP_ARROW){
+            side = Side.UP;
+        } else if(key == Key.DOWN_ARROW){
+            side = Side.DOWN;
+        } else if (key == Key.RIGHT_ARROW){
+            side = Side.RIGHT;
+        } else if (key == Key.LEFT_ARROW){
+            side = Side.LEFT;
+        } else {
+            return;
         }
+
+        if (zelda.atDestination(side)) {
+            levelWon();
+        }
+
         Point scrollVector = side.getDirectionVector();
+
         for (double i = 0; i < Player.SPEED; i++) {
             if (!zelda.collision(side)){
                 double newX =  -scrollVector.getX() + maze.getPosition().getX();
@@ -258,7 +238,19 @@ public class MazeGame {
                 }
             }
         }
+
         minimap.setPlayerPosition(zelda.getGraphics().getCenter().getX() + Math.abs(maze.getPosition().getX()), zelda.getGraphics().getCenter().getY() + Math.abs(maze.getPosition().getY()));
         zelda.changeImage(side);
+    }
+
+    private void levelWon() {
+        cutSceneShown = true;
+        canvas.removeAll();
+        enemyGroup.removeAll();
+        nonCollidingElements.removeAll();
+        destinationGroup.removeAll();
+        maze.removeAll();
+        level++;
+        resetGame();
     }
 }
