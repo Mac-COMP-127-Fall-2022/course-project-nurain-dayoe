@@ -23,19 +23,19 @@ public class Enemy extends Character{
         this.enemyGroup = enemyGroup;
         this.position = position;
 
-        animMapFront = new PlayerImage("anim2Front.bmp", "anim3Front.bmp", "anim1Front.bmp");
-        animMapLeft = new PlayerImage("anim2Left.bmp", "anim3Left.bmp", "anim1Left.bmp");
-        animMapRight = new PlayerImage("anim2Right.bmp", "anim3Right.bmp", "anim1Right.bmp");
-        animMapBack = new PlayerImage("anim2Back.bmp", "anim3Back.bmp", "anim1Back.bmp");
+        animMapFront = new PlayerImage("resPack/front1.jpg", "resPack/front2.jpg", "resPack/front3.jpg");
+        animMapLeft = new PlayerImage("resPack/left1.jpg", "resPack/left2.jpg", "resPack/left3.jpg");
+        animMapRight = new PlayerImage("resPack/right1.jpg", "resPack/right2.jpg", "resPack/right3.jpg");
+        animMapBack = new PlayerImage("resPack/back1.jpg", "resPack/back2.jpg", "resPack/back3.jpg");
 
         graphic = new Image(animMapFront.next());
 
         WIDTH = graphic.getImageWidth();
         HEIGHT = graphic.getHeight();
         
-        graphic = new Image("anim1Front.bmp");
+        graphic = new Image("resPack/front1.jpg");
 
-        graphic.setScale(0.3);
+        graphic.setScale(0.9);
         
         // enemyGroup.add(line1);
         // enemyGroup.add(line2);
@@ -120,7 +120,6 @@ public class Enemy extends Character{
         if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
             return true;
         }
-        
         
         
         //If the Character will hit the minimap, there is a collision
