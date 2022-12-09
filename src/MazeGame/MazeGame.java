@@ -46,7 +46,6 @@ public class MazeGame {
     public EnemyCamp[] camps = new EnemyCamp[4];
     private Image destinationDoor;
     private int animationCounter = 0;
-
     private Thread t = new Thread();
 
     /**
@@ -125,14 +124,14 @@ public class MazeGame {
             
         minimap.setTargetPosition(MazeGenerator.getEndingPoint().getX() * 40 + 20, MazeGenerator.getEndingPoint().getY() * 40 + 20);
         
-        destinationDoor = new Image("grass.jpg");//TODO: change it to the real door/destination image
+        destinationDoor = new Image("resPack/destinationdoor1.jpg");//TODO: change it to the real door/destination image
         destinationDoor.setPosition(MazeGenerator.getEndingPoint().getX()*40,(MazeGenerator.getEndingPoint().getY()*40));
         destinationGroup.add(destinationDoor);
         
         maze.setPosition(0, 0);
         hearts = new Hearts(zelda.getHealth(), canvas);
 
-        canvas.add(destinationDoor);
+        canvas.add(destinationGroup);
         
         canvas.add(hearts.getGraphics());
         
@@ -143,6 +142,7 @@ public class MazeGame {
         canvas.add(cutSceneBG);
 
         canvas.animate((i)->{
+            
             if (!cutScene1shown) {
                 if (animationCounter % 10 == 0){
                     for (EnemyCamp camp : camps) {

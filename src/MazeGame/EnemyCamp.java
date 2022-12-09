@@ -16,15 +16,15 @@ public class EnemyCamp {
     // private Image img1_2 = new Image("enemyCamp1_2.jpg");
     // private Image img2_2 = new Image("enemyCamp2_2.jpg");
     
-    private Image img0_0 = new Image("grass.jpg");
-    private Image img1_0 = new Image("grass.jpg");
-    private Image img2_0 = new Image("grass.jpg");
-    private Image img0_1 = new Image("grass.jpg");
-    private Image img1_1 = new Image("grass.jpg");
-    private Image img2_1 = new Image("grass.jpg");
-    private Image img0_2 = new Image("grass.jpg");
-    private Image img1_2 = new Image("grass.jpg");
-    private Image img2_2 = new Image("grass.jpg");
+    private Image img0_0 = new Image("resPack/00Camp.jpg");
+    private Image img1_0 = new Image("resPack/10Camp.jpg");
+    private Image img2_0 = new Image("resPack/20Camp.jpg");
+    private Image img0_1 = new Image("resPack/01Camp.jpg");
+    private Image img1_1 = new Image("resPack/11Camp.jpg");
+    private Image img2_1 = new Image("resPack/21Camp.jpg");
+    private Image img0_2 = new Image("resPack/02Camp.jpg");
+    private Image img1_2 = new Image("resPack/12Camp.jpg");
+    private Image img2_2 = new Image("resPack/22Camp.jpg");
     private CanvasWindow canvas;
     private GraphicsGroup maze;
     private GraphicsGroup minimap;
