@@ -1,5 +1,7 @@
 package MazeGame;
 
+import java.awt.Color;
+
 import MazeGame.MazeGame.Side;
 import edu.macalester.graphics.*;
 
@@ -11,7 +13,6 @@ public class Enemy extends Character{
     private static final double responseRadius = 1000;
     private EnemyCamp enemyCamp;
     private GraphicsGroup enemyGroup;
-    //private Line line1 = new Line(0,0,0,0), line2 = new Line(0,0,0,0);
     
     public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer, GraphicsGroup enemyGroup, Point position){
         super(canvas, maze, minimap, enemyGroup);
@@ -34,9 +35,6 @@ public class Enemy extends Character{
 
         graphic.setScale(0.9);
         graphic.setCenter(position);
-        
-        // enemyGroup.add(line1);
-        // enemyGroup.add(line2);
     }
     
     public void moveTowardPlayer() {
@@ -46,7 +44,6 @@ public class Enemy extends Character{
         double playerCenterY = mainPlayer.getGraphics().getCenter().getY() + Math.abs(maze.getY());
         if (distanceToPlayer(playerCenterX, playerCenterY) < responseRadius && graphic.getX() + graphic.getWidth() + enemyGroup.getX() + 20 < MazeGame.CANVAS_WIDTH && graphic.getX() + enemyGroup.getX() > 20 && graphic.getY() + enemyGroup.getY() + graphic.getHeight() + 20 < MazeGame.CANVAS_HEIGHT && graphic.getY() + enemyGroup.getX() > 20) {
             if (enemyCenterX > playerCenterX + 5 && !collision(Side.LEFT)) {
-                //System.out.println(distanceToPlayer(playerCenterX, playerCenterY));
                 move(Side.LEFT);
             } 
             if (enemyCenterX + 5 < playerCenterX && !collision(Side.RIGHT)) {
@@ -82,50 +79,43 @@ public class Enemy extends Character{
         
         switch (side) { //Set the collision points to check based on the direction of movement
             case RIGHT:
-                point1 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
-                point2 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.5);
-                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.15);
+                point2 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.5);
+                point3 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.85);
                 break;
             case LEFT:
-                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
-                point2 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.5);
-                point3 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.15);
+                point2 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.5);
+                point3 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.85);
                 break;
             case UP:
-                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
-                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.35);
-                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
+                point1 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.15);
+                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.15);
+                point3 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.15);
                 break;
             case DOWN: 
-                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
-                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.65);
-                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.85);
+                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.85);
+                point3 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.85);
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        
-        // line1.setStartPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
-        // line1.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65));
-        // line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
-        // line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
         
         //If there is an obstacle at any checked point, there is a collision
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
             return true;
         }
         
-        // if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
-        //     return true;
-        // }
+        if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
+            return true;
+        }
         
         if (canvas.getElementAt(point1) == mainPlayer.getGraphics() || canvas.getElementAt(point2) == mainPlayer.getGraphics() || canvas.getElementAt(point3) == mainPlayer.getGraphics()) {
             mainPlayer.decrementHealth();
             return true;
         }
-        
-        
-        
+
         //If the Character will hit the minimap, there is a collision
         if (minimap.getElementAt(point1) != null || minimap.getElementAt(point2) != null || minimap.getElementAt(point3) != null) {
             return true;
