@@ -1,5 +1,6 @@
 package MazeGame;
 import edu.macalester.graphics.*;
+import java.time.Instant;
 
 /**
  * A visual player that can move along the road with arrow key presses.
@@ -7,6 +8,7 @@ import edu.macalester.graphics.*;
 public class Player extends Character{
 
     GraphicsGroup destinationGroup;
+    Instant timeSinceLiveLost = Instant.now();
     
     /**
      * Generate a new player at the given inital position within the canvas.
@@ -93,6 +95,7 @@ public class Player extends Character{
                 throw new IllegalArgumentException();
         }
         if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
+            decrementHealth();
             return true;
         }
         
@@ -121,5 +124,17 @@ public class Player extends Character{
         }
         
         return false;
+    }
+
+    public void decrementHealth() {
+        if (Instant.now().minusSeconds(1).isAfter(timeSinceLiveLost)) {
+            healthStatus--;
+            Hearts.update(healthStatus);
+            timeSinceLiveLost = Instant.now();
+        }
+    }
+
+    public boolean isDead() {
+        return healthStatus <= 0;
     }
 }

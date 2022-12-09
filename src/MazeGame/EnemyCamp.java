@@ -48,8 +48,8 @@ public class EnemyCamp {
         for (int i = 0; i < 4; i++) {
             enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer, enemyGroup, enemyPositions[i].add(graphic.getPosition()));
             enemyGroup.add(enemies[i].getGraphics());
-            enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
-            System.out.println(enemies[i].getGraphics().getCenter());
+            //enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
+            //System.out.println(enemies[i].getGraphics().getCenter());
         }
         
     }
