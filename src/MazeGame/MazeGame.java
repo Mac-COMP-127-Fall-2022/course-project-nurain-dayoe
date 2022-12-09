@@ -33,6 +33,7 @@ public class MazeGame {
     private CanvasWindow canvas;
     private GraphicsGroup maze = new GraphicsGroup();
     private Minimap minimap;
+    private Hearts hearts;
     private Player zelda;
     private GraphicsGroup enemyGroup;
     private GraphicsGroup nonCollidingElements;
@@ -41,12 +42,11 @@ public class MazeGame {
     private Image groundBackGround; 
     private Random rand = new Random();
     public static int level; 
-    private boolean cutSceneShown = true;
+    private boolean cutScene1shown = true;
     public EnemyCamp[] camps = new EnemyCamp[4];
     private Image destinationDoor;
     private int animationCounter = 0;
-
-    private Thread screenshotThread = new Thread();
+    private Thread t = new Thread();
 
     /**
      * Create a new MazeGame instance starting at level 1. 
@@ -58,14 +58,14 @@ public class MazeGame {
         resetGame();
 
         canvas.onClick((i)->{
-            if (cutSceneShown) { //TODO: Fix glitch during endgame
+            if (cutScene1shown){
                 canvas.remove(cutSceneBG);
-                cutSceneShown = false;
+                cutScene1shown = false;
             }
         });
         
         canvas.onKeyDown((key)->{
-            if(!cutSceneShown) {
+            if(!cutScene1shown) {
                 move(key.getKey());
             }
         });
@@ -82,8 +82,7 @@ public class MazeGame {
      * Reset the board for a new level or game.
      */
     private void resetGame(){
-        //Sources: https://stackoverflow.com/questions/2435397/calling-invokeandwait-from-the-edt and https://stackoverflow.com/questions/7315941/java-lang-illegalthreadstateexception
-        screenshotThread = new Thread(new Runnable() {
+        t = new Thread(new Runnable() {
             @Override
             public void run() {
                 canvas.screenShot("res/mazeminimap.jpg");
@@ -104,9 +103,11 @@ public class MazeGame {
         canvas.draw();
 
         canvas.pause(2000);
-        screenshotThread.start();
+        t.start();
         canvas.pause(1000);
         maze.setScale(1,1);
+
+        
 
         //Start the cutscene by showing the image and button
         if (level == 0) {
@@ -123,30 +124,26 @@ public class MazeGame {
             
         minimap.setTargetPosition(MazeGenerator.getEndingPoint().getX() * 40 + 20, MazeGenerator.getEndingPoint().getY() * 40 + 20);
         
-        destinationDoor = new Image("grass.jpg");//TODO: change it to the real door/destination image
+        destinationDoor = new Image("resPack/destinationdoor1.jpg");//TODO: change it to the real door/destination image
         destinationDoor.setPosition(MazeGenerator.getEndingPoint().getX()*40,(MazeGenerator.getEndingPoint().getY()*40));
         destinationGroup.add(destinationDoor);
         
         maze.setPosition(0, 0);
-        Hearts.generateHearts(5, canvas);
+        hearts = new Hearts(zelda.getHealth(), canvas);
 
-        canvas.add(destinationDoor);
+        canvas.add(destinationGroup);
         
-        canvas.add(Hearts.getGraphics());
+        canvas.add(hearts.getGraphics());
         
         canvas.add(nonCollidingElements);
         canvas.add(enemyGroup);
-        canvas.add(destinationGroup);
         canvas.add(zelda.getGraphics());
         canvas.add(minimap.getGraphics());
         canvas.add(cutSceneBG);
 
         canvas.animate((i)->{
-            if (!cutSceneShown) {
-                if (zelda.isDead()) {
-                    cutSceneShown = true;
-                    endGame();
-                }
+            
+            if (!cutScene1shown) {
                 if (animationCounter % 10 == 0){
                     for (EnemyCamp camp : camps) {
                         for (Enemy enemy : camp.getEnemies()) {
@@ -159,11 +156,6 @@ public class MazeGame {
         });  
     }
 
-    private void endGame() {
-        canvas.removeAll();
-        //TODO: Change cutSceneBG to "Game Over"
-        canvas.add(cutSceneBG);
-    }
 
     public void createEnemyCamps(){
         int randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
@@ -223,7 +215,7 @@ public class MazeGame {
      */
     public void scroll(Side side){
         if (zelda.atDestination(side)) {
-            cutSceneShown = true;
+            cutScene1shown = true;
             canvas.removeAll();
             enemyGroup.removeAll();
             nonCollidingElements.removeAll();

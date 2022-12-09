@@ -34,14 +34,16 @@ public class MazeGenerator {
         destinationPoint = new Point(rand.nextInt(90, 100),rand.nextInt(90, 100));
         createPath(beginningPoint, destinationPoint);
         createPath(new Point (89, 12), new Point(2, 95));
+        roadMatrix[(int)destinationPoint.getX()] [ (int)destinationPoint.getY()] = true;
         Block.buildMaze(roadMatrix);
+        
     }
 
     /**
     * Return a GraphicsGroup containing the block objects of the maze.
     */
     public static GraphicsGroup getMaze() {
-        roadMatrix[(int)destinationPoint.getX()] [ (int)destinationPoint.getY()] = true;
+        
         GraphicsGroup group = new GraphicsGroup();
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 100; y++){

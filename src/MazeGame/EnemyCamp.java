@@ -16,15 +16,15 @@ public class EnemyCamp {
     // private Image img1_2 = new Image("enemyCamp1_2.jpg");
     // private Image img2_2 = new Image("enemyCamp2_2.jpg");
     
-    private Image img0_0 = new Image("grass.jpg");
-    private Image img1_0 = new Image("grass.jpg");
-    private Image img2_0 = new Image("grass.jpg");
-    private Image img0_1 = new Image("grass.jpg");
-    private Image img1_1 = new Image("grass.jpg");
-    private Image img2_1 = new Image("grass.jpg");
-    private Image img0_2 = new Image("grass.jpg");
-    private Image img1_2 = new Image("grass.jpg");
-    private Image img2_2 = new Image("grass.jpg");
+    private Image img0_0 = new Image("resPack/00Camp.jpg");
+    private Image img1_0 = new Image("resPack/10Camp.jpg");
+    private Image img2_0 = new Image("resPack/20Camp.jpg");
+    private Image img0_1 = new Image("resPack/01Camp.jpg");
+    private Image img1_1 = new Image("resPack/11Camp.jpg");
+    private Image img2_1 = new Image("resPack/21Camp.jpg");
+    private Image img0_2 = new Image("resPack/02Camp.jpg");
+    private Image img1_2 = new Image("resPack/12Camp.jpg");
+    private Image img2_2 = new Image("resPack/22Camp.jpg");
     private CanvasWindow canvas;
     private GraphicsGroup maze;
     private GraphicsGroup minimap;
@@ -48,8 +48,8 @@ public class EnemyCamp {
         for (int i = 0; i < 4; i++) {
             enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer, enemyGroup, enemyPositions[i].add(graphic.getPosition()));
             enemyGroup.add(enemies[i].getGraphics());
-            //enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
-            //System.out.println(enemies[i].getGraphics().getCenter());
+            enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
+            System.out.println(enemies[i].getGraphics().getCenter());
         }
         
     }

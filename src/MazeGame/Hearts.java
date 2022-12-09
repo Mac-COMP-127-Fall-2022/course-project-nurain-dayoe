@@ -1,39 +1,38 @@
 package MazeGame;
 
-import edu.macalester.graphics.*;
+import edu.macalester.graphics.CanvasWindow;
+import edu.macalester.graphics.GraphicsGroup;
+import edu.macalester.graphics.Image;
 
 public class Hearts {
 
-    private static GraphicsGroup heartsGroup = new GraphicsGroup();
-    private static Image[] hearts = new Image[5];
+    GraphicsGroup heartsGroup = new GraphicsGroup();
 
-    //Private constructor left empty to enforce non-instantiability
-    private Hearts() {
-
-    }
-
-    public static void generateHearts(Integer heartCount,CanvasWindow canvas){
+    public Hearts(Integer heartCount,CanvasWindow canvas){
         for(int c = 0 ; c<heartCount; c++){
             double centerY =  canvas.getHeight()/25 ;
             double centerX =  canvas.getWidth()/20 + (c*canvas.getWidth()/27);
-            hearts[c] = new Image("Heart.bmp");
-            hearts[c].setScale(0.5);
-            heartsGroup.add(hearts[c]);
-            hearts[c].setCenter(centerX, centerY);
+            Image tempHeart = new Image("Heart.bmp");
+            tempHeart.setScale(0.5);
+            heartsGroup.add(tempHeart);
+            tempHeart.setCenter(centerX, centerY);
         }
     }
-
-    public static GraphicsGroup getGraphics(){
+    public GraphicsGroup getGraphics(){
         return heartsGroup;
     }
+    public void update(Integer heartCount,CanvasWindow canvas){
+        heartsGroup.removeAll();
+        for(int c = 0 ; c<heartCount; c++){
 
-    public static boolean update(Integer heartCount){
-        try {
-            heartsGroup.remove(hearts[heartCount]);
-            return true;
-        } catch (Exception e) {
-            return false;
+            double centerY =  canvas.getHeight()/25 ;
+            double centerX = (canvas.getWidth() - canvas.getWidth()/20 )- (c*canvas.getWidth()/14);
+            Image tempHeart = new Image("Heart.bmp");
+            heartsGroup.add(tempHeart);
+            tempHeart.setCenter(centerX, centerY);
+
         }
+
     }
 
 }

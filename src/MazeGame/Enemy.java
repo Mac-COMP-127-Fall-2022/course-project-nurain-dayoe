@@ -1,4 +1,6 @@
 package MazeGame;
+import java.util.ArrayList;
+import java.util.Random;
 
 import java.awt.Color;
 
@@ -13,6 +15,8 @@ public class Enemy extends Character{
     private static final double responseRadius = 1000;
     private EnemyCamp enemyCamp;
     private GraphicsGroup enemyGroup;
+    private int stepCounter = -1;
+    //private Line line1 = new Line(0,0,0,0), line2 = new Line(0,0,0,0);
     
     public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer, GraphicsGroup enemyGroup, Point position){
         super(canvas, maze, minimap, enemyGroup);
@@ -43,16 +47,17 @@ public class Enemy extends Character{
         double playerCenterX = mainPlayer.getGraphics().getCenter().getX() + Math.abs(maze.getX());
         double playerCenterY = mainPlayer.getGraphics().getCenter().getY() + Math.abs(maze.getY());
         if (distanceToPlayer(playerCenterX, playerCenterY) < responseRadius && graphic.getX() + graphic.getWidth() + enemyGroup.getX() + 20 < MazeGame.CANVAS_WIDTH && graphic.getX() + enemyGroup.getX() > 20 && graphic.getY() + enemyGroup.getY() + graphic.getHeight() + 20 < MazeGame.CANVAS_HEIGHT && graphic.getY() + enemyGroup.getX() > 20) {
-            if (enemyCenterX > playerCenterX + 5 && !collision(Side.LEFT)) {
+            if (enemyCenterX > playerCenterX + 10 && !collision(Side.LEFT)) {
+                //System.out.println(distanceToPlayer(playerCenterX, playerCenterY));
                 move(Side.LEFT);
             } 
-            if (enemyCenterX + 5 < playerCenterX && !collision(Side.RIGHT)) {
+            if (enemyCenterX + 10 < playerCenterX && !collision(Side.RIGHT)) {
                 move(Side.RIGHT);
             }
-            if (enemyCenterY > playerCenterY + 5 && !collision(Side.UP)) {
+            if (enemyCenterY > playerCenterY + 10 && !collision(Side.UP)) {
                 move(Side.UP);
             }
-            if (enemyCenterY + 5 < playerCenterY && !collision(Side.DOWN)) {
+            if (enemyCenterY + 10 < playerCenterY && !collision(Side.DOWN)) {
                 move(Side.DOWN);
             }
         }
@@ -61,8 +66,9 @@ public class Enemy extends Character{
     @Override
     public void move(Side side) {
         for (int i = 0; i < 10; i++) {
-            position = position.add(side.getDirectionVector());
-            graphic.setPosition(position);
+            Point newPosition = position.add(side.getDirectionVector());
+            position = newPosition;
+            graphic.setPosition(newPosition);
         }
         changeImage(side);
     }
@@ -107,15 +113,17 @@ public class Enemy extends Character{
             return true;
         }
         
-        if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
-            return true;
-        }
+        // if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
+        //     return true;
+        // }
         
         if (canvas.getElementAt(point1) == mainPlayer.getGraphics() || canvas.getElementAt(point2) == mainPlayer.getGraphics() || canvas.getElementAt(point3) == mainPlayer.getGraphics()) {
             mainPlayer.decrementHealth();
             return true;
         }
-
+        
+        
+        
         //If the Character will hit the minimap, there is a collision
         if (minimap.getElementAt(point1) != null || minimap.getElementAt(point2) != null || minimap.getElementAt(point3) != null) {
             return true;
