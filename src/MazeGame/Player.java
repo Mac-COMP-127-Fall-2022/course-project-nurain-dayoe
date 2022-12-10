@@ -6,9 +6,9 @@ import java.time.Instant;
  * A visual player that can move along the road with arrow key presses.
  */
 public class Player extends Character{
-
-    GraphicsGroup destinationGroup;
-    Instant timeSinceLiveLost = Instant.now();
+    private static double SCALE_FACTOR = 0.8;
+    private GraphicsGroup destinationGroup;
+    private Instant timeSinceLiveLost = Instant.now();
     
     /**
      * Generate a new player at the given inital position within the canvas.
@@ -26,7 +26,7 @@ public class Player extends Character{
         graphic = new Image(animMapFront.next());
 
         graphic.setCenter(initialPosition.getX() * 40 + 20, initialPosition.getY() * 40 + 20);
-        graphic.setScale(0.8);
+        graphic.setScale(SCALE_FACTOR);
         
         position = graphic.getPosition();
         WIDTH = graphic.getWidth();
@@ -41,16 +41,16 @@ public class Player extends Character{
         double y = graphic.getY();
         switch (side) { //Set the collision points to check based on the direction of movement
             case RIGHT:
-                point = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
+                point = new Point(x + WIDTH, y + HEIGHT * 0.5);
                 break;
             case LEFT:
-                point = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
+                point = new Point(x, y + HEIGHT * 0.5);
                 break;
             case UP:
-                point = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
+                point = new Point(x + WIDTH + 0.5, y);
                 break;
             case DOWN: 
-                point = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
+                point = new Point(x + WIDTH * 0.5, y + HEIGHT);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -84,24 +84,24 @@ public class Player extends Character{
         
         switch (side) { //Set the collision points to check based on the direction of movement
             case RIGHT:
-                point1 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
-                point2 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.5);
-                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
+                point1 = new Point(x + WIDTH, y);
+                point2 = new Point(x + WIDTH, y + HEIGHT * 0.5);
+                point3 = new Point(x + WIDTH, y + HEIGHT);
                 break;
             case LEFT:
-                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
-                point2 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.5);
-                point3 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
+                point1 = new Point(x, y);
+                point2 = new Point(x, y + HEIGHT * 0.5);
+                point3 = new Point(x, y + HEIGHT);
                 break;
             case UP:
-                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35);
-                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.35);
-                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35);
+                point1 = new Point(x, y);
+                point2 = new Point(x + WIDTH * 0.5, y);
+                point3 = new Point(x + WIDTH, y);
                 break;
             case DOWN: 
-                point1 = new Point(x + WIDTH * 0.35, y + HEIGHT * 0.65);
-                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.65);
-                point3 = new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65);
+                point1 = new Point(x, y + HEIGHT);
+                point2 = new Point(x + WIDTH * 0.5, y + HEIGHT);
+                point3 = new Point(x + WIDTH, y + HEIGHT);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -127,10 +127,10 @@ public class Player extends Character{
         }
 
         //if any side of the Character would move out of bounds, there is a collision
-        Point right = new Point(x + WIDTH * 0.7, y + HEIGHT * 0.5);
-        Point left = new Point(x + WIDTH * 0.3, y + HEIGHT * 0.5);
-        Point up = new Point(x + WIDTH * 0.5, y + WIDTH * 0.3);
-        Point down = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.7);
+        Point right = new Point(x + WIDTH, y + HEIGHT * 0.5);
+        Point left = new Point(x, y + HEIGHT * 0.5);
+        Point up = new Point(x + WIDTH * 0.5, y);
+        Point down = new Point(x + WIDTH * 0.5, y + HEIGHT);
         if (right.getX() >= MazeGame.CANVAS_WIDTH || left.getX() <= 0 || up.getY() <= 0 || down.getY() >= MazeGame.CANVAS_HEIGHT) {
             return true;
         }
@@ -142,6 +142,7 @@ public class Player extends Character{
         if (Instant.now().minusSeconds(1).isAfter(timeSinceLiveLost)) {
             healthStatus--;
             Hearts.update(healthStatus);
+            canvas.draw();
             timeSinceLiveLost = Instant.now();
         }
     }
