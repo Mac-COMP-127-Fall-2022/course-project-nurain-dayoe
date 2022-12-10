@@ -113,9 +113,9 @@ public class MazeGame {
 
         //Start the cutscene by showing the image and button
         if (level == 0) {
-            cutSceneBG = new Image(0,0,"cutscene1.jpg");
+            cutSceneBG = new Image(0,0,"cutscene0.jpg");
         } else {
-            cutSceneBG = new Image(0,0,"nextLevel.jpg");
+            cutSceneBG = new Image(0,0,"nextLevelCutScene.jpg");
         }
 
         nonCollidingElements = new GraphicsGroup(0, 0);
@@ -164,8 +164,10 @@ public class MazeGame {
 
     private void endGame() {
         canvas.removeAll();
-        //TODO: Change cutSceneBG to "Game Over"
+        cutSceneBG = new Image(0, 0, "gameover.jpg");
         canvas.add(cutSceneBG);
+        
+        
     }
 
 

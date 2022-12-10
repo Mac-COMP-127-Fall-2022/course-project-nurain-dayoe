@@ -18,15 +18,15 @@ public class Player extends Character{
         this.healthStatus = 5;
         this.destinationGroup = destinationGroup;
 
-        animMapFront = new PlayerImage("anim2Front.bmp", "anim3Front.bmp", "anim1Front.bmp");
-        animMapLeft = new PlayerImage("anim2Left.bmp", "anim3Left.bmp", "anim1Left.bmp");
-        animMapRight = new PlayerImage("anim2Right.bmp", "anim3Right.bmp", "anim1Right.bmp");
-        animMapBack = new PlayerImage("anim2Back.bmp", "anim3Back.bmp", "anim1Back.bmp");
+        animMapFront = new PlayerImage("resPack/playerfront1.jpg", "resPack/playerfront2.jpg", "resPack/playerfront3.jpg");
+        animMapLeft = new PlayerImage("resPack/playerleft1.jpg", "resPack/playerleft2.jpg", "resPack/playerleft3.jpg");
+        animMapRight = new PlayerImage("resPack/playerright1.jpg", "resPack/playerright2.jpg", "resPack/playerright3.jpg");
+        animMapBack = new PlayerImage("resPack/playerback1.jpg", "resPack/playerback2.jpg", "resPack/playerback3.jpg");
 
         graphic = new Image(animMapFront.next());
 
         graphic.setCenter(initialPosition.getX() * 40 + 20, initialPosition.getY() * 40 + 20);
-        graphic.setScale(0.3);
+        graphic.setScale(0.8);
         
         position = graphic.getPosition();
         WIDTH = graphic.getWidth();
