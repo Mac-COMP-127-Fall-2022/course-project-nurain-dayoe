@@ -4,9 +4,12 @@ import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
 
 import java.util.Random;
-import java.util.List;
-import java.io.File;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+import java.util.HashSet;
+import java.io.File;
+import java.util.ArrayList;
 //Source https://go.codetogether.com/#/14543ac2-a2bf-48c2-8fb7-66bd061bed03/dOc02knOTzti1VbaitFjLE
 //Source: https://stackoverflow.com/questions/44654291/is-it-good-practice-to-use-ordinal-of-enum
 public class MazeGame {
@@ -45,8 +48,8 @@ public class MazeGame {
     public EnemyCamp[] camps = new EnemyCamp[4];
     private Image destinationDoor;
     private int animationCounter = 0;
-    private Thread screenshotThread = new Thread();
-
+    private Thread deleteScreenshotThread = new Thread(), screenshotThread = new Thread();
+    private boolean gameOver = false;
     /**
      * Create a new MazeGame instance starting at level 1. 
      */
@@ -60,7 +63,19 @@ public class MazeGame {
             if (cutSceneShown){
                 canvas.remove(cutSceneBG);
                 cutSceneShown = false;
+                if (gameOver){
+                    
+                    canvas.removeAll();
+                    enemyGroup.removeAll();
+                    nonCollidingElements.removeAll();
+                    destinationGroup.removeAll();
+                    maze.removeAll();
+                    level = 0;
+                    zelda.healthStatus = 5;
+                    resetGame();
+                }
             }
+            
         });
         
         canvas.onKeyDown((key)->{
@@ -79,15 +94,45 @@ public class MazeGame {
      */
     private void resetGame(){
         //Sources: https://stackoverflow.com/questions/2435397/calling-invokeandwait-from-the-edt and https://stackoverflow.com/questions/7315941/java-lang-illegalthreadstateexception
-        screenshotThread = new Thread(new Runnable() {
+        
+        deleteScreenshotThread = new Thread(new Runnable() {
             @Override
-            public void run() {
-                canvas.screenShot("res/mazeminimap.jpg");
+            public synchronized void run() {
+                File mapImageFile = new File("res/mazeminimap.jpg");
+                mapImageFile.delete();
+                if (!mapImageFile.exists()) {
+                    System.out.println(true);
+                }
             }
         });
 
-        File mapImageFile = new File("res/mazeminimap.jpg");
-        mapImageFile.delete();
+        screenshotThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                canvas.add(groundBackGround);
+                canvas.add(maze);
+                
+                maze.setScale(0.25, 0.25);
+                maze.setCenter(canvas.getCenter());
+                canvas.draw();
+
+                deleteScreenshotThread.start();
+                try {
+                    deleteScreenshotThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                canvas.pause(1000);
+                canvas.screenShot("res/mazeminimap.jpg");
+                File mapImageFile;
+                do {
+                    mapImageFile = new File("res/mazeminimap.jpg");
+                    canvas.pause(1000);
+                } while (!mapImageFile.exists());
+                canvas.pause(1000);
+                canvas.removeAll();
+            }
+        });
 
         MazeGenerator.generateMaze();
         maze = MazeGenerator.getMaze();
@@ -97,19 +142,20 @@ public class MazeGame {
         destinationDoor = new Image("resPack/destinationdoor1.jpg");
         groundBackGround = new Image("ground.jpg");
         
+        if (level == 0) {
+            screenshotThread.start();
+            try {
+                screenshotThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            minimap = new Minimap(canvas);
+        }
+
         canvas.add(groundBackGround);
         canvas.add(maze);
-        
-        maze.setScale(0.25, 0.25);
-        maze.setCenter(canvas.getCenter());
-        canvas.draw();
-
-        canvas.pause(2000);
-        screenshotThread.start();
-        canvas.pause(1000);
         maze.setScale(1,1);
-
-        
+        maze.setCenter(0,0);
 
         //Start the cutscene by showing the image and button
         if (level == 0) {
@@ -119,11 +165,11 @@ public class MazeGame {
         }
 
         nonCollidingElements = new GraphicsGroup(0, 0);
-        minimap = new Minimap(canvas);
+        
         this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
 
         createEnemyCamps();
-            
+        
         minimap.setTargetPosition(MazeGenerator.getEndingPoint().getX() * 40 + 20, MazeGenerator.getEndingPoint().getY() * 40 + 20);
         destinationDoor.setPosition(MazeGenerator.getEndingPoint().getX()*40,(MazeGenerator.getEndingPoint().getY()*40));
         
@@ -140,14 +186,15 @@ public class MazeGame {
         canvas.add(enemyGroup);
         canvas.add(destinationGroup);
         canvas.add(zelda.getGraphics());
-        canvas.add(minimap.getGraphics());
+        if (level == 0) {
+            canvas.add(minimap.getGraphics());
+        }
         canvas.add(cutSceneBG);
 
         canvas.animate((i)->{
             
             if (!cutSceneShown) {
                 if (zelda.isDead()) {
-                    cutSceneShown = true;
                     endGame();
                 }
                 if (animationCounter % 10 == 0){
@@ -166,31 +213,27 @@ public class MazeGame {
         canvas.removeAll();
         cutSceneBG = new Image(0, 0, "gameover.jpg");
         canvas.add(cutSceneBG);
-        
+        cutSceneShown = true;
+        gameOver = true;
         
     }
 
 
     public void createEnemyCamps(){
-        int randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
-        List<Integer> pos = MazeGenerator.enemyCampLocation().get(randInd);
-        int x = pos.get(0)*40;
-        int y = pos.get(1)*40;
-        int previousX = x;
-        int previousY = y;
+        HashSet<ArrayList<Integer>> possibleEnemyCamp = new HashSet<>();
+        possibleEnemyCamp = MazeGenerator.enemyCampLocation();
         for (int i = 0; i < 4; i++){
+
+            int randInd = rand.nextInt(possibleEnemyCamp.size()-1);
+            ArrayList<Integer> pos = (ArrayList<Integer>) possibleEnemyCamp.toArray()[randInd];
+
+            possibleEnemyCamp.remove(pos);
+            
+            int x = pos.get(0)*40;
+            int y = pos.get(1)*40;
             camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
             camps[i].populateEnemies(x, y, nonCollidingElements, enemyGroup);
             
-            while((Math.abs(x-previousX) < 600)&&(Math.abs(y-previousY)<600)){
-                randInd = rand.nextInt(MazeGenerator.enemyCampLocation().size()-1);
-                pos = MazeGenerator.enemyCampLocation().get(randInd);
-                x = pos.get(0)*40;
-                y = pos.get(1)*40;
-
-            }
-            previousX = x;
-            previousY = y;
         }
     }
 

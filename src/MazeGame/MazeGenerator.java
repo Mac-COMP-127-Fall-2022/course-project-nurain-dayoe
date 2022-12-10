@@ -71,8 +71,8 @@ public class MazeGenerator {
         return false;
     }
 
-    public static ArrayList<ArrayList<Integer>> enemyCampLocation(){
-        ArrayList<ArrayList<Integer>> domain = new ArrayList<>();
+    public static HashSet<ArrayList<Integer>> enemyCampLocation(){
+        HashSet<ArrayList<Integer>> domain = new HashSet<>();
 
         for (int x = 0; x < 100; x++) {
             for (int y = 0; y < 100; y++){

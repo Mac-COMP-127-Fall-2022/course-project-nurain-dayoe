@@ -1,6 +1,7 @@
 package MazeGame;
 
 import java.awt.Color;
+import java.io.File;
 
 import edu.macalester.graphics.*;
 
@@ -12,7 +13,7 @@ public class Minimap {
     private GraphicsGroup miniMap;
     private Image mapImage;
     private Ellipse mapPointer;
-    private Integer pointerSize;
+    private int pointerSize;
     private Rectangle destinationPointer;
 
     private Rectangle border;
@@ -24,14 +25,15 @@ public class Minimap {
         miniMap = new GraphicsGroup();
         boolean success = false;
         do {
-            try {
-                canvas.pause(1000);
+            canvas.pause(1000);
+            File mapImageFile = new File("res/mazeminimap.jpg");
+            if (mapImageFile.exists()) {
                 mapImage = new Image("mazeminimap.jpg");
-                success = true;
-            } catch (Exception e) {
-                System.out.println(e);
-                success = false;
+                if (Math.abs(mapImage.getWidth() - 64) > 1) {
+                    success = true;
+                }
             }
+            //System.out.println(success);
         } while (!success);
         
         mapImage.setScale(0.1,0.1);
