@@ -23,7 +23,7 @@ public class Hearts {
     public static void generateHearts(Integer heartCount){
         for(int c = 0 ; c < heartCount; c++){
             double centerY =  MazeGame.CANVAS_HEIGHT/25 ;
-            double centerX =  MazeGame.CANVAS_WIDTH/20 + (MazeGame.CANVAS_WIDTH/27);
+            double centerX =  MazeGame.CANVAS_WIDTH/20 + (c*MazeGame.CANVAS_WIDTH/27);
             hearts[c] = new Image("Heart.bmp");
             hearts[c].setScale(0.5);
             heartsGroup.add(hearts[c]);
@@ -42,6 +42,7 @@ public class Hearts {
     public static boolean removeHeart(){
         try {
             heartsGroup.remove(hearts[heartCount - 1]);
+            heartCount--;
             return true;
         } catch (Exception e) {
             return false;
