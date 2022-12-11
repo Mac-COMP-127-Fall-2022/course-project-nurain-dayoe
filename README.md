@@ -37,7 +37,7 @@ Minimap only works for the first level. Due to an issue with a Kilt Graphics met
 
 Bugs : 
 
-The game canvas can get cropped to incorrect ratios when this game is played on a smaller screen. Enemies' movement can randomly stop and get stuck. 
+The game canvas can get cropped to incorrect ratios when this game is played on a smaller screen. Enemies' movement can randomly stop and get stuck. In rare cases, enemy camps populate on top of each other.
 
 ## Societal impact
 
