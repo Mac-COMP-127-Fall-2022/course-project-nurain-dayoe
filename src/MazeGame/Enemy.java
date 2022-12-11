@@ -44,18 +44,17 @@ public class Enemy extends Character{
         double enemyCenterY = graphic.getCenter().getY();
         double playerCenterX = mainPlayer.getGraphics().getCenter().getX() + Math.abs(maze.getX());
         double playerCenterY = mainPlayer.getGraphics().getCenter().getY() + Math.abs(maze.getY());
-        if (distanceToPlayer(playerCenterX, playerCenterY) < responseRadius && graphic.getX() + graphic.getWidth() + enemyGroup.getX() + 20 < MazeGame.CANVAS_WIDTH && graphic.getX() + enemyGroup.getX() > 20 && graphic.getY() + enemyGroup.getY() + graphic.getHeight() + 20 < MazeGame.CANVAS_HEIGHT && graphic.getY() + enemyGroup.getX() > 20) {
-            if (enemyCenterX > playerCenterX + 10 && !collision(Side.LEFT)) {
-                //System.out.println(distanceToPlayer(playerCenterX, playerCenterY));
+        if (graphic.getX() + graphic.getWidth() + enemyGroup.getX() + 20 < MazeGame.CANVAS_WIDTH && graphic.getX() + enemyGroup.getX() > 20 && graphic.getY() + enemyGroup.getY() + graphic.getHeight() + 20 < MazeGame.CANVAS_HEIGHT && graphic.getY() + enemyGroup.getX() > 20) {
+            if (enemyCenterX > playerCenterX + 10) {
                 move(Side.LEFT);
             } 
-            if (enemyCenterX + 10 < playerCenterX && !collision(Side.RIGHT)) {
+            if (enemyCenterX + 10 < playerCenterX) {
                 move(Side.RIGHT);
             }
-            if (enemyCenterY > playerCenterY + 10 && !collision(Side.UP)) {
+            if (enemyCenterY > playerCenterY + 10) {
                 move(Side.UP);
             }
-            if (enemyCenterY + 10 < playerCenterY && !collision(Side.DOWN)) {
+            if (enemyCenterY + 10 < playerCenterY) {
                 move(Side.DOWN);
             }
         }

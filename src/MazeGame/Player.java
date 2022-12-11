@@ -148,6 +148,10 @@ public class Player extends Character{
     }
 
     public boolean isDead() {
-        return healthStatus <= 0;
+        if (healthStatus <= 0) {
+            healthStatus = 5;
+            return true;
+        }
+        return false;
     }
 }

@@ -5,13 +5,11 @@ import edu.macalester.graphics.events.*;
 
 import java.util.Random;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
-
 import java.util.HashSet;
 import java.io.File;
 import java.util.ArrayList;
-//Source https://go.codetogether.com/#/14543ac2-a2bf-48c2-8fb7-66bd061bed03/dOc02knOTzti1VbaitFjLE
-//Source: https://stackoverflow.com/questions/44654291/is-it-good-practice-to-use-ordinal-of-enum
+
+
 public class MazeGame {
     public static enum Side {
         RIGHT(new Point(1, 0)), 
@@ -31,51 +29,37 @@ public class MazeGame {
     } //A enum to represent the four directions and their associated movement vectors
     
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
-    //public static final HashMap<Side, Point> directionVectors = new HashMap<Side, Point>(Map.of(Side.RIGHT, new Point(1,0), Side.LEFT, new Point(-1, 0), Side.UP, new Point(0, -1), Side.DOWN, new Point(0, 1))); //HashMap to relate Point objects to correspoinding directions
-
     private CanvasWindow canvas;
     private GraphicsGroup maze = new GraphicsGroup();
     private Minimap minimap;
-    private Player zelda;
+    private Player player;
     private GraphicsGroup enemyGroup;
     private GraphicsGroup nonCollidingElements;
     private GraphicsGroup destinationGroup;
     private Image cutSceneBG;
     private Image groundBackGround; 
     private Random rand = new Random();
-    public static int level; 
+    public static int level = -1; 
     private boolean cutSceneShown = true;
     public EnemyCamp[] camps = new EnemyCamp[4];
     private Image destinationDoor;
     private int animationCounter = 0;
     private Thread deleteScreenshotThread = new Thread(), screenshotThread = new Thread();
     private boolean gameOver = false;
+   
     /**
      * Create a new MazeGame instance starting at level 1. 
      */
     public MazeGame() {
         canvas = new CanvasWindow("Breath of the Maze", CANVAS_WIDTH, CANVAS_HEIGHT);
-        level = 0;
         
         resetGame();
 
-        canvas.onClick((i)->{ //TODO: Fix glitch during end game
-            if (cutSceneShown){
+        canvas.onClick((i)->{
+            if (cutSceneShown && !gameOver){
                 canvas.remove(cutSceneBG);
                 cutSceneShown = false;
-                if (gameOver){
-                    
-                    canvas.removeAll();
-                    enemyGroup.removeAll();
-                    nonCollidingElements.removeAll();
-                    destinationGroup.removeAll();
-                    maze.removeAll();
-                    level = 0;
-                    zelda.healthStatus = 5;
-                    resetGame();
-                }
             }
-            
         });
         
         canvas.onKeyDown((key)->{
@@ -142,7 +126,7 @@ public class MazeGame {
         destinationDoor = new Image("resPack/destinationdoor1.jpg");
         groundBackGround = new Image("ground.jpg");
         
-        if (level == 0) {
+        if (level == -1) {
             screenshotThread.start();
             try {
                 screenshotThread.join();
@@ -158,15 +142,15 @@ public class MazeGame {
         maze.setCenter(0,0);
 
         //Start the cutscene by showing the image and button
-        if (level == 0) {
+        if (level == -1) {
             cutSceneBG = new Image(0,0,"cutscene0.jpg");
-        } else {
+        } else if (level != 0) {
             cutSceneBG = new Image(0,0,"nextLevelCutScene.jpg");
         }
 
         nonCollidingElements = new GraphicsGroup(0, 0);
         
-        this.zelda = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
+        this.player = new Player(canvas, maze, destinationGroup, minimap, MazeGenerator.getBeginningPoint(),enemyGroup);
 
         createEnemyCamps();
         
@@ -185,16 +169,17 @@ public class MazeGame {
         canvas.add(nonCollidingElements);
         canvas.add(enemyGroup);
         canvas.add(destinationGroup);
-        canvas.add(zelda.getGraphics());
-        if (level == 0) {
+        canvas.add(player.getGraphics());
+        if (level == -1) {
             canvas.add(minimap.getGraphics());
+            level++;
         }
         canvas.add(cutSceneBG);
 
         canvas.animate((i)->{
             
             if (!cutSceneShown) {
-                if (zelda.isDead()) {
+                if (player.isDead()) {
                     endGame();
                 }
                 if (animationCounter % 10 == 0){
@@ -215,7 +200,6 @@ public class MazeGame {
         canvas.add(cutSceneBG);
         cutSceneShown = true;
         gameOver = true;
-        
     }
 
 
@@ -231,7 +215,7 @@ public class MazeGame {
             
             int x = pos.get(0)*40;
             int y = pos.get(1)*40;
-            camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), zelda);
+            camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), player);
             camps[i].populateEnemies(x, y, nonCollidingElements, enemyGroup);
             
         }
@@ -256,22 +240,22 @@ public class MazeGame {
             return;
         }
 
-        if (zelda.atDestination(side)) {
+        if (player.atDestination(side)) {
             levelWon();
         }
 
         Point scrollVector = side.getDirectionVector();
 
         for (double i = 0; i < Player.SPEED; i++) {
-            if (!zelda.collision(side)){
+            if (!player.collision(side)){
                 double newX =  -scrollVector.getX() + maze.getPosition().getX();
                 double newY = -scrollVector.getY() + maze.getPosition().getY();
-                double newPlayerX = zelda.getPosition().add(side.getDirectionVector()).getX();
-                double newPlayerY = zelda.getPosition().add(side.getDirectionVector()).getY();
+                double newPlayerX = player.getPosition().add(side.getDirectionVector()).getX();
+                double newPlayerY = player.getPosition().add(side.getDirectionVector()).getY();
 
                 //if moving the Player will keep it within the center of the screen, more the Player. Else, if moving the maze is valid, move the maze. Otherwise, move the Player.
                 if ((newPlayerX > 550 && side == Side.LEFT) || (newPlayerX < 450 && side == Side.RIGHT) || (newPlayerY > 550 && side == Side.UP) || (newPlayerY < 450 && side == Side.DOWN)) {
-                    zelda.move(side);
+                    player.move(side);
                 } else if (newX >= CANVAS_WIDTH - maze.getWidth() && newY >= CANVAS_HEIGHT - maze.getHeight() && newX <= 0 && newY <= 0){
                     maze.setPosition(newX, newY);
                     groundBackGround.setPosition(newX,newY);
@@ -279,13 +263,13 @@ public class MazeGame {
                     destinationGroup.setPosition(newX,newY);
                     enemyGroup.setPosition(newX, newY);
                 } else {
-                    zelda.move(side);
+                    player.move(side);
                 }
             }
         }
 
-        minimap.setPlayerPosition(zelda.getGraphics().getCenter().getX() + Math.abs(maze.getPosition().getX()), zelda.getGraphics().getCenter().getY() + Math.abs(maze.getPosition().getY()));
-        zelda.changeImage(side);
+        minimap.setPlayerPosition(player.getGraphics().getCenter().getX() + Math.abs(maze.getPosition().getX()), player.getGraphics().getCenter().getY() + Math.abs(maze.getPosition().getY()));
+        player.changeImage(side);
     }
 
     private void levelWon() {
