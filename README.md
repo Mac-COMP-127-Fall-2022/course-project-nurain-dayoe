@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Breath of the maze 
 
 About the game : 
@@ -13,6 +12,10 @@ Sources used :
     https://stackoverflow.com/questions/2435397/calling-invokeandwait-from-the-edt
 
     https://stackoverflow.com/questions/7315941/java-lang-illegalthreadstateexception
+
+    https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html
+
+    https://www.baeldung.com/java-thread-join
     
     Images and Graphics for characters and Map elements: Tenzin Dayoe 
 
@@ -39,7 +42,4 @@ Known Issues :
 Societal impact
 
     Our game follows a character that appears as a white male with no option to change the character’s appearance. The game has no sound and does not support VoiceOver making it unplayable for people with low vision or blindness. Colors are not customizable, which might make it difficult to differentiate between the road and walls for some players. Sizes are not customizable either, and some players may experience motion sickness from the scrolling animations. Enemies may move too quickly for some players, making it difficult to win.
-=======
-# Breadth of the Maze
->>>>>>> 3dbb93dad8b021d454dbf7f484fb4dec90298f55
 
