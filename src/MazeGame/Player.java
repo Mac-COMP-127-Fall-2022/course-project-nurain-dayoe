@@ -35,11 +35,16 @@ public class Player extends Character{
         minimap.setPlayerPosition(graphic.getCenter().getX(), graphic.getCenter().getY());
     }
 
+    /**
+     * Determine whether the player will reach it's destination with this move.
+     * @param side The direction in which the player is moving
+     * @return true if the player is at the destination.
+     */
     public boolean atDestination(MazeGame.Side side) {
         Point point;
         double x = graphic.getX();
         double y = graphic.getY();
-        switch (side) { //Set the collision points to check based on the direction of movement
+        switch (side) { //Set the points to check based on the direction of movement
             case RIGHT:
                 point = new Point(x + WIDTH, y + HEIGHT * 0.5);
                 break;
@@ -111,10 +116,6 @@ public class Player extends Character{
             return true;
         }
         
-        // line1.setStartPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
-        // line1.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.65));
-        // line2.setStartPosition(new Point(x + WIDTH * 0.35, y + HEIGHT * 0.35));
-        // line2.setEndPosition(new Point(x + WIDTH * 0.65, y + HEIGHT * 0.35));
         
         //If there is an obstacle at any checked point, there is a collision
         if (maze.getElementAt(point1) != null || maze.getElementAt(point2) != null || maze.getElementAt(point3) != null) {
@@ -138,10 +139,13 @@ public class Player extends Character{
         return false;
     }
 
+    /**
+     * If it has been more than one second since the player last lost a life, decrement player health by one.
+     */
     public void decrementHealth() {
         if (Instant.now().minusSeconds(1).isAfter(timeSinceLiveLost)) {
             healthStatus--;
-            Hearts.update(healthStatus);
+            Hearts.removeHeart();
             canvas.draw();
             timeSinceLiveLost = Instant.now();
         }

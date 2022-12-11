@@ -71,6 +71,10 @@ public class MazeGenerator {
         return false;
     }
 
+    /**
+     * Determine the valid locations for an enemy camp (9 by 9 squares of road)
+     * @return A HashSet of Arraylists of Integers with the valid locations.
+     */
     public static HashSet<ArrayList<Integer>> enemyCampLocation(){
         HashSet<ArrayList<Integer>> domain = new HashSet<>();
 

@@ -2,6 +2,9 @@ package MazeGame;
 
 import edu.macalester.graphics.*;
 
+/**
+ * An EnemyCamp with four Enemies that can be displayed on the CanvasWindow.
+ */
 public class EnemyCamp {
     private GraphicsGroup graphic = new GraphicsGroup();
     public Enemy[] enemies = new Enemy[4];
@@ -32,19 +35,13 @@ public class EnemyCamp {
         return graphic;
     }
 
-    public void addToGraphicsGroup(GraphicsGroup gr, int x, int y, GraphicsGroup enemyGroup){
-        gr.add(graphic);
-        graphic.setPosition(x,y);
-        Point[] enemyPositions = {new Point(20,20), new Point(100,20), new Point(100,100), new Point(20,100)};
-        for (int i = 0; i < 4; i++) {
-            enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer, enemyGroup, enemyPositions[i].add(graphic.getPosition()));
-            enemyGroup.add(enemies[i].getGraphics());
-            enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
-            System.out.println(enemies[i].getGraphics().getCenter());
-        }
-        
-    }
-
+    /**
+     * Populate this EnemyCamp with four enemies, one at each corner of the camp.
+     * @param campX The x location of the left of EnemyCamp
+     * @param campY The y location of the top of EnemyCamp
+     * @param campGraphicsGroup The GraphicsGroup containing the EnemyCamps
+     * @param enemyGraphicsGroup The GraphicsGroup containing the Enemies
+     */
     public void populateEnemies(int campX, int campY, GraphicsGroup campGraphicsGroup, GraphicsGroup enemyGraphicsGroup){
         campGraphicsGroup.add(graphic);
         graphic.setPosition(campX,campY);
@@ -52,7 +49,6 @@ public class EnemyCamp {
         for (int i = 0; i < 4; i++) {
             enemies[i] = new Enemy(canvas, maze, minimap, this, mainPlayer, enemyGraphicsGroup, enemyPositions[i].add(graphic.getPosition()));
             enemyGraphicsGroup.add(enemies[i].getGraphics());
-            // enemies[i].getGraphics().setCenter(enemyPositions[i].add(graphic.getPosition()));
         }
         
     }

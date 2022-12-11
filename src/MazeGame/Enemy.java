@@ -9,14 +9,10 @@ import edu.macalester.graphics.*;
 public class Enemy extends Character{
     private static double SCALE_FACTOR = 0.7;
     private final Player mainPlayer;
-    private static final double responseRadius = 1000;
-    private EnemyCamp enemyCamp;
     private GraphicsGroup enemyGroup;
-    //private Line line1 = new Line(0,0,0,0), line2 = new Line(0,0,0,0);
     
     public Enemy(CanvasWindow canvas, GraphicsGroup maze, GraphicsGroup minimap, EnemyCamp enemyCamp, Player mainPlayer, GraphicsGroup enemyGroup, Point position){
         super(canvas, maze, minimap, enemyGroup);
-        this.enemyCamp = enemyCamp;
         this.mainPlayer = mainPlayer;
         this.enemyGroup = enemyGroup;
         this.position = position;
@@ -39,6 +35,9 @@ public class Enemy extends Character{
         graphic.setCenter(position);
     }
     
+    /**
+     * If this Enemy is on the screen, move it up to 10 pixels in the x and y directions toward the player
+     */
     public void moveTowardPlayer() {
         double enemyCenterX = graphic.getCenter().getX();
         double enemyCenterY = graphic.getCenter().getY();
@@ -72,10 +71,6 @@ public class Enemy extends Character{
         changeImage(side);
     }
 
-    public double distanceToPlayer(double playerCenterX, double playerCenterY) {
-        return Math.sqrt(Math.pow((playerCenterX - graphic.getCenter().getX()),2) + Math.pow((playerCenterY - graphic.getCenter().getY()),2));
-    }
-
     @Override
     public boolean collision(Side side) {
         Point point1, point2, point3;
@@ -103,26 +98,6 @@ public class Enemy extends Character{
                 point2 = new Point(x + WIDTH * 0.5, y + HEIGHT);
                 point3 = new Point(x + WIDTH, y + HEIGHT);
                 break;
-            // case RIGHT:
-            //     point1 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.15);
-            //     point2 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.5);
-            //     point3 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.85);
-            //     break;
-            // case LEFT:
-            //     point1 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.15);
-            //     point2 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.5);
-            //     point3 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.85);
-            //     break;
-            // case UP:
-            //     point1 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.15);
-            //     point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.15);
-            //     point3 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.15);
-            //     break;
-            // case DOWN: 
-            //     point1 = new Point(x + WIDTH * 0.05, y + HEIGHT * 0.85);
-            //     point2 = new Point(x + WIDTH * 0.5, y + HEIGHT * 0.85);
-            //     point3 = new Point(x + WIDTH * 0.55, y + HEIGHT * 0.85);
-            //     break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -132,17 +107,12 @@ public class Enemy extends Character{
             return true;
         }
         
-        // if (enemyGroup.getElementAt(point1) != null || enemyGroup.getElementAt(point2) != null || enemyGroup.getElementAt(point3) != null) {
-        //     return true;
-        // }
-        
+        //If the enemy will hit the player, decrement the player health
         if (canvas.getElementAt(point1) == mainPlayer.getGraphics() || canvas.getElementAt(point2) == mainPlayer.getGraphics() || canvas.getElementAt(point3) == mainPlayer.getGraphics()) {
             mainPlayer.decrementHealth();
             return true;
         }
-        
-        
-        
+
         //If the Character will hit the minimap, there is a collision
         if (minimap.getElementAt(point1) != null || minimap.getElementAt(point2) != null || minimap.getElementAt(point3) != null) {
             return true;

@@ -4,12 +4,13 @@ import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
 
 import java.util.Random;
-
 import java.util.HashSet;
-import java.io.File;
 import java.util.ArrayList;
+import java.io.File;
 
-
+/**
+ * A single-player MazeGame controlled by the arrow keys. This class contains the main method.
+ */
 public class MazeGame {
     public static enum Side {
         RIGHT(new Point(1, 0)), 
@@ -29,23 +30,22 @@ public class MazeGame {
     } //A enum to represent the four directions and their associated movement vectors
     
     public final static int CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 1000;
+    
+    private static int level = -1; 
+
+    private int animationCounter = 0;
+    private boolean cutSceneShown = true, gameOver = false;
+
     private CanvasWindow canvas;
-    private GraphicsGroup maze = new GraphicsGroup();
+    private GraphicsGroup maze = new GraphicsGroup(), enemyGroup, nonCollidingElements, destinationGroup;
+    private Image cutSceneBG, groundBackGround, destinationDoor; 
+
     private Minimap minimap;
     private Player player;
-    private GraphicsGroup enemyGroup;
-    private GraphicsGroup nonCollidingElements;
-    private GraphicsGroup destinationGroup;
-    private Image cutSceneBG;
-    private Image groundBackGround; 
-    private Random rand = new Random();
-    public static int level = -1; 
-    private boolean cutSceneShown = true;
     public EnemyCamp[] camps = new EnemyCamp[4];
-    private Image destinationDoor;
-    private int animationCounter = 0;
+
+    private Random rand = new Random();
     private Thread deleteScreenshotThread = new Thread(), screenshotThread = new Thread();
-    private boolean gameOver = false;
    
     /**
      * Create a new MazeGame instance starting at level 1. 
@@ -84,12 +84,10 @@ public class MazeGame {
             public synchronized void run() {
                 File mapImageFile = new File("res/mazeminimap.jpg");
                 mapImageFile.delete();
-                if (!mapImageFile.exists()) {
-                    System.out.println(true);
-                }
             }
         });
 
+        //Delete the old screenshot and take a new one, when this method is run. 
         screenshotThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -126,7 +124,7 @@ public class MazeGame {
         destinationDoor = new Image("resPack/destinationdoor1.jpg");
         groundBackGround = new Image("ground.jpg");
         
-        if (level == -1) {
+        if (level == -1) { //When the program is run for the first time, take a screenshot for the minimap
             screenshotThread.start();
             try {
                 screenshotThread.join();
@@ -160,12 +158,11 @@ public class MazeGame {
         destinationGroup.add(destinationDoor);
         
         maze.setPosition(0, 0);
-        Hearts.generateHearts(5, canvas);
+        Hearts.generateHearts(5);
 
+        //GraphicsObjects must be added to the canvas in a specific order.
         canvas.add(destinationGroup);
-        
         canvas.add(Hearts.getGraphics());
-        
         canvas.add(nonCollidingElements);
         canvas.add(enemyGroup);
         canvas.add(destinationGroup);
@@ -177,12 +174,11 @@ public class MazeGame {
         canvas.add(cutSceneBG);
 
         canvas.animate((i)->{
-            
             if (!cutSceneShown) {
                 if (player.isDead()) {
                     endGame();
                 }
-                if (animationCounter % 10 == 0){
+                if (animationCounter % 10 == 0){ //Every ten runs of the animate function, move the enemies
                     for (EnemyCamp camp : camps) {
                         for (Enemy enemy : camp.getEnemies()) {
                             enemy.moveTowardPlayer();
@@ -202,7 +198,9 @@ public class MazeGame {
         gameOver = true;
     }
 
-
+    /**
+     * Create four enemy camps in valid spots on the maze, each with four enemies.
+     */
     public void createEnemyCamps(){
         HashSet<ArrayList<Integer>> possibleEnemyCamp = new HashSet<>();
         possibleEnemyCamp = MazeGenerator.enemyCampLocation();
@@ -217,7 +215,6 @@ public class MazeGame {
             int y = pos.get(1)*40;
             camps[i] = new EnemyCamp(canvas, maze, minimap.getGraphics(), player);
             camps[i].populateEnemies(x, y, nonCollidingElements, enemyGroup);
-            
         }
     }
 
